@@ -1,17 +1,22 @@
 package model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.math.BigDecimal;
 
-/**
- * The persistent class for the BANK_ACCOUNT database table.
- * 
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+/** The persistent class for the BANK_ACCOUNT database table. */
 @Entity
 @Table(name = "BANK_ACCOUNT")
 @NamedQuery(name = "BankAccountEntity.findByAccountNo", query = "SELECT b FROM BankAccount b WHERE b.accountNo = :accountNo")
-public class BankAccount implements Serializable {
+public class BankAccount implements Serializable
+{
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -31,57 +36,70 @@ public class BankAccount implements Serializable {
 	@JoinColumn(name = "BANK_CUSTOMERS_PK")
 	private BankCustomer bankCustomer;
 
-	public BankAccount() {
+	public BankAccount()
+	{
 	}
 
-	public long getBankAccountPk() {
+	public long getBankAccountPk()
+	{
 		return this.bankAccountPk;
 	}
 
-	public void setBankAccountPk(long bankAccountPk) {
+	public void setBankAccountPk(long bankAccountPk)
+	{
 		this.bankAccountPk = bankAccountPk;
 	}
 
-	public String getAccountNo() {
+	public String getAccountNo()
+	{
 		return this.accountNo;
 	}
 
-	public void setAccountNo(String accountNo) {
+	public void setAccountNo(String accountNo)
+	{
 		this.accountNo = accountNo;
 	}
 
-	public BigDecimal getBalance() {
+	public BigDecimal getBalance()
+	{
 		return this.balance;
 	}
 
-	public void setBalance(BigDecimal balance) {
+	public void setBalance(BigDecimal balance)
+	{
 		this.balance = balance;
 	}
 
-	public long getBankAcctTypePk() {
+	public long getBankAcctTypePk()
+	{
 		return this.bankAcctTypePk;
 	}
 
-	public void setBankAcctTypePk(long bankAcctTypePk) {
+	public void setBankAcctTypePk(long bankAcctTypePk)
+	{
 		this.bankAcctTypePk = bankAcctTypePk;
 	}
 
-	public BankCustomer getBankCustomer() {
+	public BankCustomer getBankCustomer()
+	{
 		return this.bankCustomer;
 	}
 
-	public void setBankCustomer(BankCustomer bankCustomer) {
+	public void setBankCustomer(BankCustomer bankCustomer)
+	{
 		this.bankCustomer = bankCustomer;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return "BankAccount [bankAccountPk=" + bankAccountPk + ", accountNo=" + accountNo + ", balance=" + balance
 				+ ", bankAcctTypePk=" + bankAcctTypePk + ", bankCustomer=" + bankCustomer + "]";
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((accountNo == null) ? 0 : accountNo.hashCode());
@@ -91,7 +109,8 @@ public class BankAccount implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -99,10 +118,12 @@ public class BankAccount implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		BankAccount other = (BankAccount) obj;
-		if (accountNo == null) {
+		if (accountNo == null)
+		{
 			if (other.accountNo != null)
 				return false;
-		} else if (!accountNo.equals(other.accountNo))
+		}
+		else if (!accountNo.equals(other.accountNo))
 			return false;
 		if (bankAccountPk != other.bankAccountPk)
 			return false;
@@ -110,5 +131,4 @@ public class BankAccount implements Serializable {
 			return false;
 		return true;
 	}
-
 }

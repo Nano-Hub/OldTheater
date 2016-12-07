@@ -1,17 +1,25 @@
 package enterprise.service;
 
-import java.math.BigDecimal;
-
 import javax.ejb.Local;
 
-import model.BankCustomer;
+import model.TheaterEvent;
+import model.User;
 
 @Local
-public interface StatelessLocal {
+public interface StatelessLocal
+{
+	//	
+	//	public BankCustomer getUser(String user);
+	//
+	//	public String transferFunds( String fromAccountNo, String toAccountNo,
+	//			BigDecimal amount) throws Exception;
 
-	public BankCustomer getUser(String user);
+	public TheaterEvent getEvent(int id_event);
 
-	public String transferFunds( String fromAccountNo, String toAccountNo,
-			BigDecimal amount) throws Exception;
+	public User getUser(int id_user);
+
+	public String bookSeats(int id_event, String seat, int idUser);
+
+	public User createUser(String name, String email, String password);
 
 }
