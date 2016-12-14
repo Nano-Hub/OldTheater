@@ -12,8 +12,34 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "reservation")
-@NamedQueries({
-@NamedQuery(name = "Seat.createSeat", query = "INSERT INTO seat (seat_category, user_id, event_id) VALUES ( :category , :user_id , :event_id);"), })
+@NamedQueries
+(
+	{
+		@NamedQuery
+		(
+			name = "Reservation.book", 
+			query = "INSERT INTO reservation (seat_category_id, user_id, event_id) VALUES ( :category , :user_id , :event_id);"
+		),
+		
+		@NamedQuery
+		(
+			name = "Reservation.showReservation", 
+			query = "SELECT * INTO reservation where user_id = :user_id and event_id = :event_id;"
+		),
+		
+		@NamedQuery
+		(
+			name = "Reservation.showUser", 
+			query = "SELECT * INTO reservation where user_id = :user_id;"
+		),
+		
+		@NamedQuery
+		(
+			name = "Reservation.showAll", 
+			query = "SELECT * INTO reservation"
+		), 
+	}
+)
 
 public class Reservation
 {
