@@ -13,8 +13,9 @@ import javax.persistence.Table;
 
 /** The persistent class for the BANK_CUSTOMERS database table. */
 @Entity
-@Table(name = "User")
-@NamedQueries({ @NamedQuery(name = "User.findUserById", query = "SELECT * FROM user WHERE id_user = :idUser;"),
+@Table(name = "user")
+@NamedQueries({ 
+@NamedQuery(name = "User.findUserById", query = "SELECT * FROM user WHERE id_user = :idUser;"),
 @NamedQuery(name = "User.findUserByMail", query = "SELECT * FROM user WHERE email = :email;"),
 @NamedQuery(name = "User.createUser", query = "INSERT INTO `user` (name, password, email) VALUES ( :name , :password , :email);"),
 @NamedQuery(name = "User.displayShows", query = "SELECT event.artist_name as  artiste, event.date as date, FROM user JOIN  seat ON user.id_user = seat.user_id JOIN  event on set.id_event = event.id_event  WHERE user.id_user = :idUser ;"), })

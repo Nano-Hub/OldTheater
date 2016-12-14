@@ -16,8 +16,10 @@ import javax.persistence.Table;
 
 /** The persistent class for the BANK_CUSTOMERS database table. */
 @Entity
-@Table(name = "TheaterEvent")
-@NamedQueries({ @NamedQuery(name = "TheaterEvent", query = "SELECT * FROM event;"),
+@Table(name = "event")
+@NamedQueries({ 
+@NamedQuery(name = "TheaterEvent", query = "SELECT * FROM event;"),
+@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.id_event, e.artist_name, e.date, c.name, c.regular_price  FROM event e, event_categorie c WHERE e.categorie_id = c.id_categorie;"),
 @NamedQuery(name = "TheaterEvent.findEvent", query = "SELECT * FROM event WHERE id_event = :idEvent;"),
 @NamedQuery(name = "TheaterEvent.displayAvailableSeats", query = "SELECT id_seat, seat_category_id FROM seat  WHERE state = 1 OR state = 0 and event_id=:idEvent;") })
 
@@ -26,14 +28,14 @@ public class TheaterEvent implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "ID_EVENT")
+	@Column(name = "id_event")
 	private long idEvent;
 	@Column(name = "artist_name")
 	private String artistName;
 	@Column(name = "date")
 	private Date date;
 	
-	@OneToOne
+	@OneToOne //-> category event
 	@JoinColumn(name = "category_id")
 	private int categoryId;
 

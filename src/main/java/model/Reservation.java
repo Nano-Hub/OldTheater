@@ -7,10 +7,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "User")
+@Table(name = "reservation")
 @NamedQueries({
 @NamedQuery(name = "Seat.createSeat", query = "INSERT INTO seat (seat_category, user_id, event_id) VALUES ( :category , :user_id , :event_id);"), })
 
@@ -24,16 +25,16 @@ public class Reservation
 	@Column(name = "state")
 	private int state;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "seat_category_id")
 	private int seatCategory;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_event")
+	@JoinColumn(name = "event_id")
 	private TheaterEvent event;
 
 	@ManyToOne
-	@JoinColumn(name = "id_user")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	public Reservation(String infoSeat)
