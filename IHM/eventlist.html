@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	
+	<title>Event picking</title>
+	
+    <!-- Bootstrap -->
+	<!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  </head>
+  <body>
+ 
+
+	<div class="col-sm-4">
+	  <div class="list-group">
+		<a href="#" class="list-group-item active">
+		  Event list
+		</a>
+		<a id="event1" href="#" class="list-group-item">JUL <3</a>
+		<a id="event2" href="#" class="list-group-item">SCH</a>
+		<a id="event3" href="#" class="list-group-item">Pascal Obispo</a>
+		<a id="event4" href="#" class="list-group-item">Nolwen Leroy</a>
+	  </div>
+	</div><!-- /.col-sm-4 -->
+	
+	
+	<script type="text/javascript">
+			$( "#event1" ).click(function() {
+			  alert( "JUL <3" );
+			});
+			$( "#event2" ).click(function() {
+			  alert( "SCH" );
+			});
+			$( "#event3" ).click(function() {
+			  alert( "Pascal Obispo" );
+			});
+			$( "#event4" ).click(function() {
+			  alert( "Nolwen Leroy" );
+			});
+	</script>
+
+	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </body>
+</html>
