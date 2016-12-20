@@ -1,0 +1,58 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="book.css"/>
+
+</head>
+<body>
+	<div class="container">
+	<p class="center">Please Choose your seats (4 max) : <input type="text" ></input><button>Annuler</button></p>
+		<div id="root">
+	</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+
+	function categoryA()
+	{
+		$("#root").append('<p>Category A</p>');
+		for(var i = 1 ; i <= 25 ; i++)
+		{
+			$("#root").append('<span id="A'+i+'" class="button-checkbox"><button class="btn btn-success btnBook" data-color="success" >' + i + ' /<button></span> ');
+		}
+	}
+
+	function categoryB()
+	{
+		$("#root").append('<p>Category B</p>');
+		for(var i = 1 ; i <= 45 ; i++)
+		{
+			$("#root").append('<span id="B'+i+'" class="button-checkbox"><button class="btn btn-success btnBook" data-color="success" >' + i + ' </button></span> ');
+		}
+	}
+
+	function categoryC()
+	{
+		$("#root").append('<p>Category C</p>');
+		for(var i = 1 ; i <= 100 ; i++)
+		{
+			$("#root").append('<span id="C'+i+'" class="button-checkbox"><button class="btn btn-success btnBook" data-color="success" >' + i + ' <input type="checkbox" class="hidden"/></button></span> ');
+		}
+	}
+function categoryD()
+	{
+		$("#root").append('<p>Category D</p>');
+		for(var i = 1 ; i <= 500 ; i++)
+		{
+			$("#root").append('<span id="D'+i+'" class="button-checkbox"><button class="btn btn-success btnBook" data-color="success" >' + i + ' <input type="checkbox" class="hidden"/></button></span> ');
+		}
+	}
+	
+	
+categoryA();
+categoryB();
+categoryC();
+categoryD();
+
+</script>
+</body>
+</html>
