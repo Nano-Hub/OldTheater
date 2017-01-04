@@ -1,13 +1,12 @@
 package enterprise.service;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
-import javax.persistence.Query;
 
 import model.Reservation;
 
@@ -18,17 +17,15 @@ public class TheaterService
 	@EJB(beanName = "TheaterBean")
 	private StatelessLocal metier;
 
-	@WebMethod
-	public String getUserPwd(@WebParam(name = "idUser") int id_user)
-	{
-		return metier.getUser(id_user).getPassword();
-	}
+	//USER
 	@WebMethod
 	public String getUserUsername(@WebParam(name = "idUser") int id_user)
 	{
 		return metier.getUser(id_user).getUsername();
 	}
 	
+	
+	//THEATER EVENT
 	@WebMethod
 	public String getEventArtist(@WebParam(name = "idEvent") int id_event)
 	{
@@ -42,8 +39,21 @@ public class TheaterService
 	@WebMethod
 	public String getEventCategory(@WebParam(name = "idEvent") int id_event)
 	{
-		return metier.getEvent(id_event).getDate().toString();
+		return metier.getEvent(id_event).getCategory().getName();
 	}
+	@WebMethod
+	public float getEventRegularPrice(@WebParam(name = "idEvent") int id_event)
+	{
+		return metier.getEvent(id_event).getCategory().getPrice();
+	}
+	@WebMethod
+	public List<Reservation> getEventAvailableSeats(@WebParam(name = "idEvent") int id_event)
+	{
+		return metier.getEvent(id_event).getSeats();
+	}
+	
+	
+	
 
 	@WebMethod
 	public String bookSeats(@WebParam(name = "idEvent") int id_event, @WebParam(name = "seat") String seat, @WebParam(name = "id_user") int id_user)
