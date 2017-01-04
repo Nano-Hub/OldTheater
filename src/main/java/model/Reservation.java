@@ -16,28 +16,40 @@ import javax.persistence.Table;
 @NamedQueries
 (
 	{
-		@NamedQuery
+		/*@NamedQuery
 		(
-			name = "Reservation.book", 
-			query = "INSERT INTO reservation (seat_category_id, user_id, event_id) VALUES ( :category , :user_id , :event_id);"
+			name = "Reservation.lock", 
+			query = "INSERT INTO reservation (seat_category_id, user_id, event_id, number) VALUES ( :category , :user_id , :event_id, :number );"
 		),
 		
 		@NamedQuery
 		(
+			name = "Reservation.book", 
+			query = "INSERT INTO reservation (seat_category_id, user_id, event_id) VALUES ( :category , :user_id , :event_id );"
+		),*/
+		
+		@NamedQuery
+		(
 			name = "Reservation.showReservation", 
-			query = "SELECT * INTO reservation where user_id = :user_id and event_id = :event_id;"
+			query = "SELECT r FROM Reservation r WHERE r.user = :user_id AND r.event = :event_id "
 		),
 		
 		@NamedQuery
 		(
 			name = "Reservation.showUser", 
-			query = "SELECT * INTO reservation where user_id = :user_id;"
+			query = "SELECT r FROM Reservation r WHERE r.user = :user_id "
 		),
 		
 		@NamedQuery
 		(
 			name = "Reservation.showAll", 
-			query = "SELECT * INTO reservation"
+			query = "SELECT r FROM Reservation r"
+		), 
+		
+		@NamedQuery
+		(
+			name = "Reservation.getFromCatUserEventNumber", 
+			query = "SELECT r FROM Reservation r WHERE r.user.idUser = :userId AND r.event.idEvent = :eventId AND r.number = :number AND r.seatCategory = :category "
 		), 
 	}
 )
@@ -45,7 +57,7 @@ import javax.persistence.Table;
 public class Reservation
 {
 	@Id
-	@Column(name = "id_seat")
+	@Column(name = "id_reservation")
 	private int id;
 	@Column(name = "number")
 	private int number;
@@ -54,7 +66,7 @@ public class Reservation
 	
 	@OneToOne
 	@JoinColumn(name = "seat_category_id")
-	private int seatCategory;
+	private SeatCategory seatCategory;
 	
 	@ManyToOne
 	@JoinColumn(name = "event_id")
@@ -64,19 +76,19 @@ public class Reservation
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	public Reservation(String infoSeat)
-	{
-		this.seatCategory = infoSeat.charAt(0);
-		this.number = Integer.parseInt(infoSeat.substring(1));
-	}
 
-	public Reservation(int seatCategory, int id, TheaterEvent event, User user)
+
+	public Reservation(SeatCategory seatCategory, TheaterEvent event, User user, int number)
 	{
-		super();
 		this.seatCategory = seatCategory;
-		this.id = id;
 		this.event = event;
 		this.user = user;
+		this.number = number;
+	}
+	
+	public Reservation()
+	{
+		
 	}
 	
 	public int getId()
@@ -88,11 +100,11 @@ public class Reservation
 		this.id = id;
 	}
 
-	public int getCategory()
+	public SeatCategory getCategory()
 	{
 		return seatCategory;
 	}
-	public void setCategory(int seatCategory)
+	public void setCategory(SeatCategory seatCategory)
 	{
 		this.seatCategory = seatCategory;
 	}
@@ -123,4 +135,13 @@ public class Reservation
 	{
 		this.event = event;
 	}
+	public int getState()
+	{
+		return state;
+	}
+	public void setState(int p_state)
+	{
+		this.state = p_state;
+	}
+	
 }

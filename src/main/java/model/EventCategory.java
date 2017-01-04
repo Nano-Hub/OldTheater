@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "seat_category")
+@Table(name = "event_category")
 //TODO Remove this comment
 // CHANGE -> */ @NamedQueries({
 //		@NamedQuery(name = "SeatCategory.FindSeat", query = "SELECT * FROM seat_category WHERE id_seat_category = :id_category ;"), })
@@ -33,6 +33,7 @@ public class EventCategory
 
 	public EventCategory()
 	{
+		
 	}
 
 	public int getIdCategory()

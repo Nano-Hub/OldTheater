@@ -19,11 +19,15 @@ public class TheaterService
 
 	//USER
 	@WebMethod
-	public String getUserUsername(@WebParam(name = "idUser") int id_user)
+	public String getUsernameFromId(@WebParam(name = "idUser") int id_user)
 	{
 		return metier.getUser(id_user).getUsername();
 	}
-	
+	@WebMethod
+	public String createUser(@WebParam(name = "nom") String nom, @WebParam(name = "password") String password, @WebParam(name = "email") String email)
+	{
+		return metier.createUser(nom, email, password);		
+	}
 	
 	//THEATER EVENT
 	@WebMethod
@@ -54,7 +58,18 @@ public class TheaterService
 	
 	
 	
-
+	@WebMethod
+	public String lockSeats(@WebParam(name = "idEvent") int id_event, @WebParam(name = "seat") String seat, @WebParam(name = "id_user") int id_user)
+	{
+		try
+		{
+			return metier.lockSeats(id_event, seat, id_user);
+		}
+		catch (Exception e)
+		{
+			return e.getMessage();
+		}
+	}
 	@WebMethod
 	public String bookSeats(@WebParam(name = "idEvent") int id_event, @WebParam(name = "seat") String seat, @WebParam(name = "id_user") int id_user)
 	{
@@ -67,6 +82,8 @@ public class TheaterService
 			return e.getMessage();
 		}
 	}
+	
+	
 
 	@WebMethod
 	public String selectEvent(@WebParam(name = "idEvent") int id) throws Exception

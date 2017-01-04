@@ -4,21 +4,30 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "seat_category")
 //TODO Remove this cmoment
-//@NamedQueries({@NamedQuery(name = "SeatCategory.FindSeat", query = "SELECT * FROM seat_category WHERE id_seat_category = :id_category ;"), })
+@NamedQueries
+(
+	{
+		@NamedQuery(name = "SeatCategory.FindByName", query = "SELECT sc FROM SeatCategory sc WHERE sc.name = :name ") 
+	}
+)
 
 public class SeatCategory
 {
+	@Id
 	@Column(name = "id_seat_category")
 	private int id;
 
 	@Column(name = "name")
-	private String name;
+	private char name;
 
 	@Column(name = "multiplier")
 	private float multiplier;
@@ -27,15 +36,20 @@ public class SeatCategory
 	private int nbSeats;
 
 	//bi-directional many-to-one association to seat
-	@OneToMany(mappedBy = "reservations")
+	@OneToMany(mappedBy = "seatCategory")
 	private List<Reservation> reservations;
 
-	public SeatCategory(int id, String name, float multiplier, int nbSeats)
+	public SeatCategory(/*int id, char name, float multiplier, int nbSeats*/)
 	{
-		this.id = id;
+		/*this.id = id;
 		this.name = name;
 		this.multiplier = multiplier;
-		this.nbSeats = nbSeats;
+		this.nbSeats = nbSeats;*/
+	}
+	
+	public SeatCategory(char seatInfo)
+	{
+		this.name = seatInfo;
 	}
 
 	public int getId()
@@ -58,12 +72,12 @@ public class SeatCategory
 		this.multiplier = multiplier;
 	}
 
-	public String getName()
+	public char getName()
 	{
 		return name;
 	}
 
-	public void setName(String name)
+	public void setName(char name)
 	{
 		this.name = name;
 	}
