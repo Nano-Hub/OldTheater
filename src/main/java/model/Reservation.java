@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "reservation")
 @NamedQueries({
-@NamedQuery(name = "Seat.createSeat", query = "INSERT INTO seat (seat_category, user_id, event_id) VALUES ( :category , :user_id , :event_id);"), })
+@NamedQuery(name = "Seat.createSeat", query = "INSERT INTO seat (seat_category, user_id, event_id, state) VALUES ( :category , :user_id , :event_id, :state);"), })
 
 public class Reservation
 {

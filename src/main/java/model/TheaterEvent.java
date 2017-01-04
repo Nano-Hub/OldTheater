@@ -18,10 +18,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "event")
 @NamedQueries({ 
-@NamedQuery(name = "TheaterEvent", query = "SELECT * FROM event;"),
-@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.id_event, e.artist_name, e.date, c.name, c.regular_price  FROM event e, event_categorie c WHERE e.categorie_id = c.id_categorie;"),
-@NamedQuery(name = "TheaterEvent.findEvent", query = "SELECT * FROM event WHERE id_event = :idEvent;"),
-@NamedQuery(name = "TheaterEvent.displayAvailableSeats", query = "SELECT id_seat, seat_category_id FROM seat  WHERE state = 1 OR state = 0 and event_id=:idEvent;") })
+@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.id_event, e.artist_name, e.date, c.name, c.regular_price  FROM event e, event_category c WHERE e.category_id = c.id_category;"),
+@NamedQuery(name = "TheaterEvent.findEventById", query = "SELECT * FROM event WHERE id_event = :idEvent;"),
+@NamedQuery(name = "TheaterEvent.displayBookedSeats", query = "SELECT id_seat, seat_category_id FROM reservation WHERE event_id = :idEvent;") })
 
 public class TheaterEvent implements Serializable
 {
@@ -37,7 +36,7 @@ public class TheaterEvent implements Serializable
 	
 	@OneToOne //-> category event
 	@JoinColumn(name = "category_id")
-	private int categoryId;
+	private EventCategory category;
 
 	@OneToMany(mappedBy = "seat")
 	private List<Reservation> seats;
@@ -78,14 +77,14 @@ public class TheaterEvent implements Serializable
 		this.date = date;
 	}
 
-	public int getCategoryId()
+	public EventCategory getCategory()
 	{
-		return this.categoryId;
+		return this.category;
 	}
 
-	public void setCategoryId(int categoryId)
+	public void setCategory(EventCategory categoryId)
 	{
-		this.categoryId = categoryId;
+		this.category = categoryId;
 	}
 
 	public List<Reservation> getSeats()
@@ -111,5 +110,4 @@ public class TheaterEvent implements Serializable
 		seat.setEvent(null);
 		return seat;
 	}
-
 }

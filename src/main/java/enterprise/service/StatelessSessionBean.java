@@ -65,21 +65,8 @@ public class StatelessSessionBean implements StatelessLocal
 	private EntityManager em;
 
 	@Override
-	public TheaterEvent getEvent(int id_event)
-	{
-
-		Query query = em.createNamedQuery("TheaterEvent.findEvent");
-		query.setParameter("idEvent", id_event);
-
-		TheaterEvent te = (TheaterEvent) query.getSingleResult();
-
-		return te;
-	}
-
-	@Override
 	public User getUser(int id_user)
 	{
-
 		Query query = em.createNamedQuery("User.findUserById");
 		query.setParameter("idUser", id_user);
 
@@ -87,79 +74,7 @@ public class StatelessSessionBean implements StatelessLocal
 
 		return user;
 	}
-
-	//	@Override
-	//	public String transferFunds(String fromAccountNo, String toAccountNo, BigDecimal amount) throws Exception
-	//	{
-	//		try
-	//		{
-	//			UserTransaction utx = context.getUserTransaction();
-	//
-	//			utx.begin();
-	//			// Check for amount greater than 0
-	//			// if ( amount.doubleValue() <= 0 )
-	//			// {
-	//			// throw new Exception( "Invalid transfer amount" );
-	//			// }
-	//
-	//			// Get source bank account entity
-	//			Query query = em.createNamedQuery("BankAccountEntity.findByAccountNo");
-	//			query.setParameter("accountNo", fromAccountNo);
-	//			BankAccount fromBankAccountEntity = null;
-	//			fromBankAccountEntity = (BankAccount) query.getSingleResult();
-	//			System.out.println("--- THe first account is --- " + fromBankAccountEntity.getAccountNo());
-	//
-	//			query.setParameter("accountNo", toAccountNo);
-	//			BankAccount toBankAccountEntity = (BankAccount) query.getSingleResult();
-	//			System.out.println("--- THe secound account is --- " + toBankAccountEntity.getAccountNo());
-	//			// Check if there are enough funds in the source account for the
-	//			// transfer
-	//			BigDecimal sourceBalance = fromBankAccountEntity.getBalance();
-	//			System.out.println("Balance source = " + sourceBalance);
-	//			System.out.println("Amount " + amount);
-	//			BigDecimal bankCharge = new BigDecimal(2);
-	//
-	//			// Perform the transfer
-	//			sourceBalance = sourceBalance.subtract(amount).subtract(bankCharge);
-	//			fromBankAccountEntity.setBalance(sourceBalance);
-	//			System.out.println(fromBankAccountEntity);
-	//			BigDecimal targetBalance = toBankAccountEntity.getBalance();
-	//			toBankAccountEntity.setBalance(targetBalance.add(amount));
-	//			System.out.println(toBankAccountEntity);
-	//			System.out.println("Transfer Completed");
-	//			// Update all the accounts
-	//			// em.merge(toBankAccountEntity);
-	//			//
-	//			// em.merge(fromBankAccountEntity);
-	//			utx.commit();
-	//			return "Done - Balances after operation \r\n " + fromBankAccountEntity.getAccountNo() + ": "
-	//					+ fromBankAccountEntity.getBalance() + " \r\n" + toBankAccountEntity.getAccountNo() + ": "
-	//					+ toBankAccountEntity.getBalance();
-	//		}
-	//		catch (Exception e)
-	//		{
-	//			System.out.println(e.getMessage());
-	//			e.printStackTrace();
-	//			return e.getLocalizedMessage();
-	//		}
-	//
-	//	}
-
-	@Override
-	public String bookSeats(int id_event, String infoSeat, int idUser)
-	{
-		Reservation seat = new Reservation(infoSeat);
-		seat.setEvent(new TheaterEvent(id_event));
-
-		Query query = em.createNamedQuery("Seat.createSeat");
-		query.setParameter("category", seat.getCategory());
-		query.setParameter("user_id", idUser);
-		query.setParameter("event_id", id_event);
-		query.executeUpdate(); //INSERT INTO
-
-		return "TODO";
-	}
-
+	
 	@Override
 	public User createUser(String name, String email, String password)
 	{
@@ -175,4 +90,112 @@ public class StatelessSessionBean implements StatelessLocal
 
 		return user;
 	}
+
+	@Override
+	public User login(String email, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public TheaterEvent getEvent(int id_event)
+	{
+		Query query = em.createNamedQuery("TheaterEvent.findEventById");
+		query.setParameter("idEvent", id_event);
+
+		TheaterEvent te = (TheaterEvent) query.getSingleResult();
+
+		return te;
+	}
+
+	@Override
+	public String lockSeats(int id_event, String infoSeat, int idUser) {
+		Reservation seat = new Reservation(infoSeat);
+		seat.setEvent(new TheaterEvent(id_event));
+
+		Query query = em.createNamedQuery("Seat.createSeat");
+		query.setParameter("category", seat.getCategory());
+		query.setParameter("user_id", idUser);
+		query.setParameter("event_id", id_event);
+		query.setParameter("state", 0);
+		query.executeUpdate(); //INSERT INTO
+
+		return "TODO";
+	}
+	
+	@Override
+	public String bookSeats(int id_event, String infoSeat, int idUser)
+	{
+		Reservation seat = new Reservation(infoSeat);
+		seat.setEvent(new TheaterEvent(id_event));
+
+		Query query = em.createNamedQuery("Seat.createSeat");
+		query.setParameter("category", seat.getCategory());
+		query.setParameter("user_id", idUser);
+		query.setParameter("event_id", id_event);
+		query.setParameter("state", 1);
+		query.executeUpdate(); //INSERT INTO
+
+		return "TODO";
+	}
 }
+
+
+
+
+//	@Override
+//	public String transferFunds(String fromAccountNo, String toAccountNo, BigDecimal amount) throws Exception
+//	{
+//		try
+//		{
+//			UserTransaction utx = context.getUserTransaction();
+//
+//			utx.begin();
+//			// Check for amount greater than 0
+//			// if ( amount.doubleValue() <= 0 )
+//			// {
+//			// throw new Exception( "Invalid transfer amount" );
+//			// }
+//
+//			// Get source bank account entity
+//			Query query = em.createNamedQuery("BankAccountEntity.findByAccountNo");
+//			query.setParameter("accountNo", fromAccountNo);
+//			BankAccount fromBankAccountEntity = null;
+//			fromBankAccountEntity = (BankAccount) query.getSingleResult();
+//			System.out.println("--- THe first account is --- " + fromBankAccountEntity.getAccountNo());
+//
+//			query.setParameter("accountNo", toAccountNo);
+//			BankAccount toBankAccountEntity = (BankAccount) query.getSingleResult();
+//			System.out.println("--- THe secound account is --- " + toBankAccountEntity.getAccountNo());
+//			// Check if there are enough funds in the source account for the
+//			// transfer
+//			BigDecimal sourceBalance = fromBankAccountEntity.getBalance();
+//			System.out.println("Balance source = " + sourceBalance);
+//			System.out.println("Amount " + amount);
+//			BigDecimal bankCharge = new BigDecimal(2);
+//
+//			// Perform the transfer
+//			sourceBalance = sourceBalance.subtract(amount).subtract(bankCharge);
+//			fromBankAccountEntity.setBalance(sourceBalance);
+//			System.out.println(fromBankAccountEntity);
+//			BigDecimal targetBalance = toBankAccountEntity.getBalance();
+//			toBankAccountEntity.setBalance(targetBalance.add(amount));
+//			System.out.println(toBankAccountEntity);
+//			System.out.println("Transfer Completed");
+//			// Update all the accounts
+//			// em.merge(toBankAccountEntity);
+//			//
+//			// em.merge(fromBankAccountEntity);
+//			utx.commit();
+//			return "Done - Balances after operation \r\n " + fromBankAccountEntity.getAccountNo() + ": "
+//					+ fromBankAccountEntity.getBalance() + " \r\n" + toBankAccountEntity.getAccountNo() + ": "
+//					+ toBankAccountEntity.getBalance();
+//		}
+//		catch (Exception e)
+//		{
+//			System.out.println(e.getMessage());
+//			e.printStackTrace();
+//			return e.getLocalizedMessage();
+//		}
+//
+//	}
