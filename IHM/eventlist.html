@@ -21,35 +21,35 @@
     <![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   </head>
-  <body>
- 
-
-	<div class="col-sm-4">
-	  <div class="list-group">
-		<a href="#" class="list-group-item active">
-		  Event list
-		</a>
-		<a id="event1" href="#" class="list-group-item">JUL <3</a>
-		<a id="event2" href="#" class="list-group-item">SCH</a>
-		<a id="event3" href="#" class="list-group-item">Pascal Obispo</a>
-		<a id="event4" href="#" class="list-group-item">Nolwen Leroy</a>
-	  </div>
-	</div><!-- /.col-sm-4 -->
+  <body onload="readEvents()">
 	
+
+	<table class="table table-hover" id="tableEvents">
+	 <tr>
+		<td><strong>Spectacle name</strong></td>
+		<td><strong>Date</strong></td>
+		<td><strong>Price</strong></td>
+	  </tr>
+	</table>
+	  <!--<tr onclick="goToBookSeat(idEvent)" style="cursor: pointer">
+		<td>aaa</td>
+		<td>bbb</td>
+		<td>ddd</td>                            
+	  </tr>-->
+		
 	
 	<script type="text/javascript">
-			$( "#event1" ).click(function() {
-			  alert( "JUL <3" );
-			});
-			$( "#event2" ).click(function() {
-			  alert( "SCH" );
-			});
-			$( "#event3" ).click(function() {
-			  alert( "Pascal Obispo" );
-			});
-			$( "#event4" ).click(function() {
-			  alert( "Nolwen Leroy" );
-			});
+	
+		function readEvents()
+		{
+			 $('#tableEvents').append('<tr onclick="goToBookSeat(1)" style="cursor: pointer"><td>aaa</td><td>bbb</td><td>ddd</td></tr>');
+			 <!--$('#tableEvents').append('<tr onclick="goToBookSeat('+idEvent+')" style="cursor: pointer"><td>'+aaa+'</td><td>'+bbb+'</td><td>'+ddd+'</td></tr>');-->
+		}
+	
+		function goToBookSeat(idEvent){
+		alert(idEvent);
+		document.location.href="book.html?idEvent="+idEvent;
+		}
 	</script>
 
 	
