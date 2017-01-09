@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -17,10 +18,11 @@ import javax.persistence.Table;
 /** The persistent class for the BANK_CUSTOMERS database table. */
 @Entity
 @Table(name = "event")
-@NamedQueries({ 
-@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.idEvent, e.artistName, e.date, c.name, c.price  FROM TheaterEvent e, EventCategory c WHERE e.category = c.idCategory"),
-@NamedQuery(name = "TheaterEvent.findEventById", query = "SELECT e FROM TheaterEvent e WHERE e.idEvent = :idEvent ")
-//@NamedQuery(name = "TheaterEvent.displayBookedSeats", query = "SELECT id_reservation, seat_category_id FROM reservation WHERE event_id = :idEvent;")
+@NamedQueries({
+		@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.idEvent, e.artistName, e.date, c.name, c.price  FROM TheaterEvent e, EventCategory c WHERE e.category = c.idCategory"),
+		@NamedQuery(name = "TheaterEvent.showAllActiveEvents", query = "SELECT e.idEvent, e.artistName, e.date, c.name, c.price  FROM TheaterEvent e, EventCategory c WHERE e.category = c.idCategory AND DATE(NOW()) < e.date"),
+		@NamedQuery(name = "TheaterEvent.findEventById", query = "SELECT e FROM TheaterEvent e WHERE e.idEvent = :idEvent ")
+		//@NamedQuery(name = "TheaterEvent.displayBookedSeats", query = "SELECT id_reservation, seat_category_id FROM reservation WHERE event_id = :idEvent;")
 })
 
 public class TheaterEvent implements Serializable
@@ -34,18 +36,31 @@ public class TheaterEvent implements Serializable
 	private String artistName;
 	@Column(name = "date")
 	private Date date;
-	
+
 	@OneToOne //-> category event
 	@JoinColumn(name = "category_id")
 	private EventCategory category;
 
 	@OneToMany(mappedBy = "event")
 	private List<Reservation> seats;
-	
 
 	public TheaterEvent()
 	{
 
+	}
+
+	public ArrayList<String> getBookedSeats()
+	{
+		ArrayList<String> bookedSeats = new ArrayList<String>();
+		String seat = "";
+		for (Reservation r : seats)
+		{
+			seat = String.valueOf(r.getCategory().getName());
+			seat += r.getNumber();
+			bookedSeats.add(seat);
+			seat = "";
+		}
+		return bookedSeats;
 	}
 
 	public long getIdEvent()

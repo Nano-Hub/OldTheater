@@ -40,6 +40,8 @@
 
 package enterprise.service;
 
+import java.util.ArrayList;
+
 import javax.annotation.Resource;
 import javax.ejb.EJBContext;
 import javax.ejb.Stateless;
@@ -99,7 +101,8 @@ public class StatelessSessionBean implements StatelessLocal
 	}
 
 	@Override
-	public User login(String email, String password) {
+	public User login(String email, String password)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -116,55 +119,80 @@ public class StatelessSessionBean implements StatelessLocal
 	}
 
 	@Override
-	public String lockSeats(int id_event, String infoSeat, int idUser)
+	public ArrayList<TheaterEvent> showActiveEvents()
+	{
+		Query query = em.createNamedQuery("TheaterEvent.showAllActiveEvents");
+
+		ArrayList<TheaterEvent> listTE = (ArrayList<TheaterEvent>) query.getResultList();
+
+		return listTE;
+	}
+
+	@Override
+	public String lockSeats(int id_event, String infoSeat, int idUser) //TODO : remove seats 
 	{
 		UserTransaction utx = context.getUserTransaction();
 		System.out.println("step1");
-		try {
+		try
+		{
 			utx.begin();
 			System.out.println("step2");
 			Query query = em.createNamedQuery("SeatCategory.FindByName");
 			query.setParameter("name", infoSeat.charAt(0));
 			SeatCategory seatCat = (SeatCategory) query.getSingleResult();
 			System.out.println("step3");
-			
+
 			query = em.createNamedQuery("TheaterEvent.findEventById");
 			query.setParameter("idEvent", id_event);
 			TheaterEvent theaterEvent = (TheaterEvent) query.getSingleResult();
 			System.out.println("step4");
-			
+
 			query = em.createNamedQuery("User.findUserById");
 			query.setParameter("idUser", idUser);
 			User user = (User) query.getSingleResult();
 			System.out.println("step5");
 
-			Reservation reservation = new Reservation(seatCat, theaterEvent, user, Integer.parseInt(infoSeat.substring(1)));
+			Reservation reservation = new Reservation(seatCat, theaterEvent, user,
+					Integer.parseInt(infoSeat.substring(1)));
 			System.out.println("step6");
 			em.persist(reservation);
 			System.out.println("step7");
 
 			utx.commit();
-			
-			
-		} catch (SecurityException e) {
+
+		}
+		catch (SecurityException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IllegalStateException e) {
+		}
+		catch (IllegalStateException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (RollbackException e) {
+		}
+		catch (RollbackException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
+		}
+		catch (HeuristicMixedException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
+		}
+		catch (HeuristicRollbackException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (NotSupportedException e) {
+		}
+		catch (NotSupportedException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SystemException e) {
+		}
+		catch (SystemException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -178,52 +206,49 @@ public class StatelessSessionBean implements StatelessLocal
 	{
 		System.out.println("step1");
 		UserTransaction utx = context.getUserTransaction();
-		try {
+		try
+		{
 			utx.begin();
-	
-			System.out.println("step2");
-		Query query = em.createNamedQuery("SeatCategory.FindByName");
-		query.setParameter("name", infoSeat.charAt(0));
-		SeatCategory seatCat = (SeatCategory) query.getSingleResult();
-		
-		
-		
-		query = em.createNamedQuery("Reservation.getFromCatUserEventNumber");
-		
-		System.out.println("step3");
-		query.setParameter("number", Integer.parseInt(infoSeat.substring(1)));
-		System.out.println("step3");
-		query.setParameter("eventId", (long)id_event);
-		System.out.println("step3");
-		query.setParameter("userId", (long)idUser);
-		System.out.println("step3");
-		
-		
-		query.setParameter("category", seatCat);
-		
-		Reservation reservation = (Reservation) query.getSingleResult();
-		
-		
-		
-		System.out.println("step4");
-		reservation.setState(1);
-		System.out.println("step5");
-		em.persist(reservation);
-		System.out.println("step6");
-		utx.commit();
-		
-		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
-				| HeuristicRollbackException | NotSupportedException | SystemException e) {
+
+			Query query = em.createNamedQuery("SeatCategory.FindByName");
+			query.setParameter("name", infoSeat.charAt(0));
+			SeatCategory seatCat = (SeatCategory) query.getSingleResult();
+
+			query = em.createNamedQuery("Reservation.getFromCatUserEventNumber");
+
+			query.setParameter("number", Integer.parseInt(infoSeat.substring(1)));
+			query.setParameter("eventId", (long) id_event);
+			query.setParameter("userId", (long) idUser);
+
+			query.setParameter("category", seatCat);
+
+			Reservation reservation = (Reservation) query.getSingleResult();
+
+			reservation.setState(1);
+			em.persist(reservation);
+			utx.commit();
+
+		}
+		catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
+				| HeuristicRollbackException | NotSupportedException | SystemException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return "TODO";
 	}
+
+	@Override
+	public String getBookedSeats(int id_event)
+	{
+		Query query = em.createNamedQuery("TheaterEvent.findEventById");
+		query.setParameter("idEvent", id_event);
+		TheaterEvent event = (TheaterEvent) query.getSingleResult();
+
+		return null;
+	}
 }
-
-
-
 
 //	@Override
 //	public String transferFunds(String fromAccountNo, String toAccountNo, BigDecimal amount) throws Exception
