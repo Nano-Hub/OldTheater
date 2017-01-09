@@ -20,6 +20,8 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="js/cookie.js"></script>
+	<script src="js/eventlist.js"></script>
   </head>
   <body onload="readEvents()">
 	
@@ -31,26 +33,6 @@
 		<td><strong>Price</strong></td>
 	  </tr>
 	</table>
-	  <!--<tr onclick="goToBookSeat(idEvent)" style="cursor: pointer">
-		<td>aaa</td>
-		<td>bbb</td>
-		<td>ddd</td>                            
-	  </tr>-->
-		
-	
-	<script type="text/javascript">
-	
-		function readEvents()
-		{
-			 $('#tableEvents').append('<tr onclick="goToBookSeat(1)" style="cursor: pointer"><td>aaa</td><td>bbb</td><td>ddd</td></tr>');
-			 <!--$('#tableEvents').append('<tr onclick="goToBookSeat('+idEvent+')" style="cursor: pointer"><td>'+aaa+'</td><td>'+bbb+'</td><td>'+ddd+'</td></tr>');-->
-		}
-	
-		function goToBookSeat(idEvent){
-		alert(idEvent);
-		document.location.href="book.html?idEvent="+idEvent;
-		}
-	</script>
 
 	
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
