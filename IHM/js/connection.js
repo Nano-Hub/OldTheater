@@ -2,7 +2,8 @@
    		 	{
     			$("#buttonSubmit").click(function()
     			{
-					var token = login(document.getElementById(username), document.getElementById(password));
+					//alert(document.getElementById("username").value + " " + document.getElementById("password").value);
+					var token = login((document.getElementById("username").value, document.getElementById("password").value));
 					if(token != "")
 					{
 						setCookie("token", token, 1);
