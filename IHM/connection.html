@@ -23,23 +23,31 @@
   </head>
   <body>
     <h1>Connection</h1>
-
+	<form id="myForm" >
 		<div class="form-group">
 		  <label for="usr">Username:</label>
-		  <input type="text" class="form-control" id="username">
+		  <input type="text" class="form-control" id="username" name="username">
 		</div>
 		<div class="form-group">
 		  <label for="pwd">Password:</label>
-		  <input type="password" class="form-control" id="password">
+		  <input type="password" class="form-control" id="password" name="password">
 		</div>
-		
 		<p>
-        <button type="button" class="btn btn-lg btn-default">Connect</button>
+        <button type="button" id="buttonSubmit" class="btn btn-lg btn-default">Connect</button>
 		</p>
-	
+	</form>	
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script>
+    $(document).ready(function()
+   		 	{
+    			$("#buttonSubmit").click(function()
+    			{
+    				$.post( "myFunction", $("#myForm").serialize());
+    			});
+   			});
+    </script>
   </body>
 </html>
