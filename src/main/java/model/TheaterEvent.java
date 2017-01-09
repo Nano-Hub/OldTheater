@@ -18,9 +18,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "event")
 @NamedQueries({ 
-@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.id_event, e.artist_name, e.date, c.name, c.regular_price  FROM event e, event_category c WHERE e.category_id = c.id_category;"),
-@NamedQuery(name = "TheaterEvent.findEventById", query = "SELECT * FROM event WHERE id_event = :idEvent;"),
-@NamedQuery(name = "TheaterEvent.displayBookedSeats", query = "SELECT id_seat, seat_category_id FROM reservation WHERE event_id = :idEvent;") })
+@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.idEvent, e.artistName, e.date, c.name, c.price  FROM TheaterEvent e, EventCategory c WHERE e.category = c.idCategory"),
+@NamedQuery(name = "TheaterEvent.findEventById", query = "SELECT e FROM TheaterEvent e WHERE e.idEvent = :idEvent ")
+//@NamedQuery(name = "TheaterEvent.displayBookedSeats", query = "SELECT id_reservation, seat_category_id FROM reservation WHERE event_id = :idEvent;")
+})
 
 public class TheaterEvent implements Serializable
 {
@@ -38,11 +39,11 @@ public class TheaterEvent implements Serializable
 	@JoinColumn(name = "category_id")
 	private EventCategory category;
 
-	@OneToMany(mappedBy = "seat")
+	@OneToMany(mappedBy = "event")
 	private List<Reservation> seats;
 	
 
-	public TheaterEvent(int idEvent)
+	public TheaterEvent()
 	{
 
 	}

@@ -49,8 +49,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import model.Reservation;
+import model.SeatCategory;
 import model.TheaterEvent;
 import model.User;
 
@@ -74,9 +81,9 @@ public class StatelessSessionBean implements StatelessLocal
 
 		return user;
 	}
-	
+
 	@Override
-	public User createUser(String name, String email, String password)
+	public String createUser(String name, String email, String password)
 	{
 		Query query = em.createNamedQuery("User.createUser");
 		query.setParameter("name", name);
@@ -88,7 +95,7 @@ public class StatelessSessionBean implements StatelessLocal
 		query.setParameter("email", email);
 		User user = (User) query.getSingleResult();
 
-		return user;
+		return "Creation OK"; //TODO exception
 	}
 
 	@Override
@@ -96,7 +103,7 @@ public class StatelessSessionBean implements StatelessLocal
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public TheaterEvent getEvent(int id_event)
 	{
@@ -109,33 +116,108 @@ public class StatelessSessionBean implements StatelessLocal
 	}
 
 	@Override
-	public String lockSeats(int id_event, String infoSeat, int idUser) {
-		Reservation seat = new Reservation(infoSeat);
-		seat.setEvent(new TheaterEvent(id_event));
+	public String lockSeats(int id_event, String infoSeat, int idUser)
+	{
+		UserTransaction utx = context.getUserTransaction();
+		System.out.println("step1");
+		try {
+			utx.begin();
+			System.out.println("step2");
+			Query query = em.createNamedQuery("SeatCategory.FindByName");
+			query.setParameter("name", infoSeat.charAt(0));
+			SeatCategory seatCat = (SeatCategory) query.getSingleResult();
+			System.out.println("step3");
+			
+			query = em.createNamedQuery("TheaterEvent.findEventById");
+			query.setParameter("idEvent", id_event);
+			TheaterEvent theaterEvent = (TheaterEvent) query.getSingleResult();
+			System.out.println("step4");
+			
+			query = em.createNamedQuery("User.findUserById");
+			query.setParameter("idUser", idUser);
+			User user = (User) query.getSingleResult();
+			System.out.println("step5");
 
-		Query query = em.createNamedQuery("Seat.createSeat");
-		query.setParameter("category", seat.getCategory());
-		query.setParameter("user_id", idUser);
-		query.setParameter("event_id", id_event);
-		query.setParameter("state", 0);
-		query.executeUpdate(); //INSERT INTO
+			Reservation reservation = new Reservation(seatCat, theaterEvent, user, Integer.parseInt(infoSeat.substring(1)));
+			System.out.println("step6");
+			em.persist(reservation);
+			System.out.println("step7");
 
-		return "TODO";
+			utx.commit();
+			
+			
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (HeuristicMixedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "TODO"; //TODO TODO
+
 	}
-	
+
 	@Override
 	public String bookSeats(int id_event, String infoSeat, int idUser)
 	{
-		Reservation seat = new Reservation(infoSeat);
-		seat.setEvent(new TheaterEvent(id_event));
-
-		Query query = em.createNamedQuery("Seat.createSeat");
-		query.setParameter("category", seat.getCategory());
-		query.setParameter("user_id", idUser);
-		query.setParameter("event_id", id_event);
-		query.setParameter("state", 1);
-		query.executeUpdate(); //INSERT INTO
-
+		System.out.println("step1");
+		UserTransaction utx = context.getUserTransaction();
+		try {
+			utx.begin();
+	
+			System.out.println("step2");
+		Query query = em.createNamedQuery("SeatCategory.FindByName");
+		query.setParameter("name", infoSeat.charAt(0));
+		SeatCategory seatCat = (SeatCategory) query.getSingleResult();
+		
+		
+		
+		query = em.createNamedQuery("Reservation.getFromCatUserEventNumber");
+		
+		System.out.println("step3");
+		query.setParameter("number", Integer.parseInt(infoSeat.substring(1)));
+		System.out.println("step3");
+		query.setParameter("eventId", (long)id_event);
+		System.out.println("step3");
+		query.setParameter("userId", (long)idUser);
+		System.out.println("step3");
+		
+		
+		query.setParameter("category", seatCat);
+		
+		Reservation reservation = (Reservation) query.getSingleResult();
+		
+		
+		
+		System.out.println("step4");
+		reservation.setState(1);
+		System.out.println("step5");
+		em.persist(reservation);
+		System.out.println("step6");
+		utx.commit();
+		
+		} catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
+				| HeuristicRollbackException | NotSupportedException | SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return "TODO";
 	}
 }
