@@ -14,13 +14,14 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 /** The persistent class for the BANK_CUSTOMERS database table. */
 @Entity
 @Table(name = "event")
 @NamedQueries({
 		@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.idEvent, e.artistName, e.date, c.name, c.price  FROM TheaterEvent e, EventCategory c WHERE e.category = c.idCategory"),
-		@NamedQuery(name = "TheaterEvent.showAllActiveEvents", query = "SELECT e.idEvent, e.artistName, e.date, c.name, c.price  FROM TheaterEvent e, EventCategory c WHERE e.category = c.idCategory AND DATE(NOW()) < e.date"),
+		@NamedQuery(name = "TheaterEvent.showAllActiveEvents", query = "SELECT e FROM TheaterEvent e WHERE  (e.date > CURRENT_TIME) "), 
 		@NamedQuery(name = "TheaterEvent.findEventById", query = "SELECT e FROM TheaterEvent e WHERE e.idEvent = :idEvent ")
 		//@NamedQuery(name = "TheaterEvent.displayBookedSeats", query = "SELECT id_reservation, seat_category_id FROM reservation WHERE event_id = :idEvent;")
 })
@@ -31,11 +32,11 @@ public class TheaterEvent implements Serializable
 
 	@Id
 	@Column(name = "id_event")
-	private long idEvent;
+	private int idEvent;
 	@Column(name = "artist_name")
 	private String artistName;
 	@Column(name = "date")
-	private Date date;
+	private java.util.Calendar date;
 
 	@OneToOne //-> category event
 	@JoinColumn(name = "category_id")
@@ -63,7 +64,7 @@ public class TheaterEvent implements Serializable
 		return bookedSeats;
 	}
 
-	public long getIdEvent()
+	public int getIdEvent()
 	{
 		return this.idEvent;
 	}
@@ -72,25 +73,21 @@ public class TheaterEvent implements Serializable
 	{
 		this.idEvent = idEvent;
 	}
-
-	public String getArtistName()
-	{
-		return this.artistName;
+	
+	public java.util.Calendar getDate() {
+		return date;
 	}
 
-	public void setArtisteName(String artistName)
-	{
-		this.artistName = artistName;
-	}
-
-	public Date getDate()
-	{
-		return this.date;
-	}
-
-	public void setDate(Date date)
-	{
+	public void setDate(java.util.Calendar date) {
 		this.date = date;
+	}
+
+	public String getArtistName() {
+		return artistName;
+	}
+
+	public void setArtistName(String artistName) {
+		this.artistName = artistName;
 	}
 
 	public EventCategory getCategory()
@@ -103,11 +100,12 @@ public class TheaterEvent implements Serializable
 		this.category = categoryId;
 	}
 
+	@XmlTransient
 	public List<Reservation> getSeats()
 	{
 		return this.seats;
 	}
-
+	
 	public void setSeats(List<Reservation> seats)
 	{
 		this.seats = seats;
@@ -126,4 +124,12 @@ public class TheaterEvent implements Serializable
 		seat.setEvent(null);
 		return seat;
 	}
+
+	@Override
+	public String toString() {
+		return "TheaterEvent [idEvent=" + idEvent + ", artistName=" + artistName + ", date=" + date + ", category="
+				+ category + ", seats=" + seats + "]";
+	}
+	
+	
 }

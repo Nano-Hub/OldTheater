@@ -41,6 +41,7 @@
 package enterprise.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.ejb.EJBContext;
@@ -48,6 +49,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
@@ -57,6 +59,10 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
+import org.apache.tools.ant.taskdefs.SubAnt;
 
 import model.Reservation;
 import model.SeatCategory;
@@ -87,24 +93,51 @@ public class StatelessSessionBean implements StatelessLocal
 	@Override
 	public String createUser(String name, String email, String password)
 	{
-		Query query = em.createNamedQuery("User.createUser");
-		query.setParameter("name", name);
-		query.setParameter("password", password);
-		query.setParameter("email", email);
-		query.executeUpdate();
-
-		query = em.createNamedQuery("User.findUserByEmail");
-		query.setParameter("email", email);
-		User user = (User) query.getSingleResult();
-
+		UserTransaction utx = context.getUserTransaction();
+		
+		try 
+		{
+			utx.begin();
+			User user = new User(name, password, email);
+			em.persist(user);
+			utx.commit();
+			
+		} catch (NotSupportedException | SystemException | SecurityException |
+				IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return "Creation KO"; //TODO exception
+		}
+			
 		return "Creation OK"; //TODO exception
 	}
 
 	@Override
-	public User login(String email, String password)
+	public String login(String email, String password)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		//Does this email exist ?
+		Query query = em.createNamedQuery("User.findUserByMail");
+		query.setParameter("email", email);
+		
+		try
+		{
+			User user = (User) query.getSingleResult();
+		
+			if(password.equals(user.getPassword())) //password OK
+			{
+				return String.valueOf(user.getIdUser());
+			}
+			else
+			{
+				return "Wrong password";
+			}
+		}
+		catch (NoResultException e) //Wrong password
+		{
+			return "Email does not exist";
+		}
+		
 	}
 
 	@Override
@@ -112,20 +145,26 @@ public class StatelessSessionBean implements StatelessLocal
 	{
 		Query query = em.createNamedQuery("TheaterEvent.findEventById");
 		query.setParameter("idEvent", id_event);
-
 		TheaterEvent te = (TheaterEvent) query.getSingleResult();
 
 		return te;
 	}
 
 	@Override
-	public ArrayList<TheaterEvent> showActiveEvents()
+	public List<TheaterEvent> showActiveEvents()
 	{
 		Query query = em.createNamedQuery("TheaterEvent.showAllActiveEvents");
-
-		ArrayList<TheaterEvent> listTE = (ArrayList<TheaterEvent>) query.getResultList();
-
-		return listTE;
+		try
+		{
+			List<TheaterEvent> listTE = (List<TheaterEvent>) query.getResultList();
+			return listTE;
+		}
+		catch(NoResultException e)
+		{
+			System.err.println("NO EVENT IN THE FUTUR");
+			System.err.println(e);
+			return null;
+		}
 	}
 
 	@Override
@@ -136,27 +175,20 @@ public class StatelessSessionBean implements StatelessLocal
 		try
 		{
 			utx.begin();
-			System.out.println("step2");
 			Query query = em.createNamedQuery("SeatCategory.FindByName");
 			query.setParameter("name", infoSeat.charAt(0));
 			SeatCategory seatCat = (SeatCategory) query.getSingleResult();
-			System.out.println("step3");
 
 			query = em.createNamedQuery("TheaterEvent.findEventById");
 			query.setParameter("idEvent", id_event);
 			TheaterEvent theaterEvent = (TheaterEvent) query.getSingleResult();
-			System.out.println("step4");
 
 			query = em.createNamedQuery("User.findUserById");
 			query.setParameter("idUser", idUser);
 			User user = (User) query.getSingleResult();
-			System.out.println("step5");
 
-			Reservation reservation = new Reservation(seatCat, theaterEvent, user,
-					Integer.parseInt(infoSeat.substring(1)));
-			System.out.println("step6");
+			Reservation reservation = new Reservation(seatCat, theaterEvent, user, Integer.parseInt(infoSeat.substring(1)));
 			em.persist(reservation);
-			System.out.println("step7");
 
 			utx.commit();
 
@@ -204,7 +236,6 @@ public class StatelessSessionBean implements StatelessLocal
 	@Override
 	public String bookSeats(int id_event, String infoSeat, int idUser)
 	{
-		System.out.println("step1");
 		UserTransaction utx = context.getUserTransaction();
 		try
 		{
@@ -245,8 +276,30 @@ public class StatelessSessionBean implements StatelessLocal
 		Query query = em.createNamedQuery("TheaterEvent.findEventById");
 		query.setParameter("idEvent", id_event);
 		TheaterEvent event = (TheaterEvent) query.getSingleResult();
+		
+		query = em.createNamedQuery("Reservation.getBookedSeat");
+		query.setParameter("event_id", event);
+		try{
+		List<Reservation> seats = (List<Reservation>) query.getResultList();
+		
+		String seatsStr = "";
+		for (Reservation r : seats)
+		{
+			seatsStr += String.valueOf(r.getCategory().getName());
+			seatsStr += r.getNumber();
+			seatsStr += "-";
+		}
+		
+		seatsStr = seatsStr.substring(0,  seatsStr.length()-1);
 
-		return null;
+		return seatsStr;
+		}
+		catch(NoResultException e)
+		{
+			System.out.println("NO RESULT ");
+			System.out.println(e);
+			return null;
+		}
 	}
 }
 

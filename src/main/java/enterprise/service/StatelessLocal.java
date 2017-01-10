@@ -1,6 +1,7 @@
 package enterprise.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.Local;
 
@@ -11,12 +12,12 @@ import model.User;
 public interface StatelessLocal
 {
 	//USER
-	public User getUser(int id_user);
+	public User getUser(int id_user); 
 	public String createUser(String name, String email, String password);
-	public User login(String email, String password); //TODO return int idUser
+	public String login(String email, String password);
 	
 	//EVENT  and   EVENT CATEGORY
-	public ArrayList<TheaterEvent> showActiveEvents();
+	public List<TheaterEvent> showActiveEvents();
 	public TheaterEvent getEvent(int id_event);
 	
 	//RESERVATION   AND   SEAT CATEGORY

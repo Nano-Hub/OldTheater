@@ -11,6 +11,7 @@ import javax.jws.WebService;
 
 import model.Reservation;
 import model.TheaterEvent;
+import model.User;
 
 @Stateless
 @WebService
@@ -19,7 +20,7 @@ public class TheaterService
 	@EJB(beanName = "TheaterBean")
 	private StatelessLocal metier;
 
-	//USER
+	//USERS
 	@WebMethod
 	public String getUsernameFromId(@WebParam(name = "idUser") int id_user)
 	{
@@ -32,44 +33,27 @@ public class TheaterService
 	{
 		return metier.createUser(nom, email, password);
 	}
-
-	//THEATER EVENT
+	
 	@WebMethod
-	public ArrayList<TheaterEvent> getAllEvents()
+	public String login(@WebParam(name = "email") String email, @WebParam(name = "password") String password)
+	{
+		return metier.login(email, password);
+	}
+
+	//THEATER EVENTS
+	@WebMethod
+	public List<TheaterEvent> getAllEvents()
 	{
 		return metier.showActiveEvents();
 	}
-
+	
 	@WebMethod
-	public String getEventArtist(@WebParam(name = "idEvent") int id_event)
+	public TheaterEvent getEvent(@WebParam(name = "idEvent") int idEvent)
 	{
-		return metier.getEvent(id_event).getArtistName();
+		return metier.getEvent(idEvent);
 	}
 
-	@WebMethod
-	public String getEventDate(@WebParam(name = "idEvent") int id_event)
-	{
-		return metier.getEvent(id_event).getDate().toString();
-	}
-
-	@WebMethod
-	public String getEventCategory(@WebParam(name = "idEvent") int id_event)
-	{
-		return metier.getEvent(id_event).getCategory().getName();
-	}
-
-	@WebMethod
-	public float getEventRegularPrice(@WebParam(name = "idEvent") int id_event)
-	{
-		return metier.getEvent(id_event).getCategory().getPrice();
-	}
-
-	@WebMethod
-	public List<Reservation> getEventAvailableSeats(@WebParam(name = "idEvent") int id_event)
-	{
-		return metier.getEvent(id_event).getSeats();
-	}
-
+	//RESERVATIONS AND SEATS
 	@WebMethod
 	public String lockSeats(@WebParam(name = "idEvent") int id_event, @WebParam(name = "seat") String seat,
 			@WebParam(name = "id_user") int id_user)
@@ -97,27 +81,47 @@ public class TheaterService
 			return e.getMessage();
 		}
 	}
-
+	
 	@WebMethod
-	public String selectEvent(@WebParam(name = "idEvent") int id) throws Exception
+	public String getEventBookedSeats(@WebParam(name = "idEvent") int id_event)
 	{
-		return null;
-	}
-
-	@WebMethod
-	public String selectCategory(@WebParam(name = "idCategory") int id)
-	{
-		return null;
-	}
-
-	@WebMethod
-	public String selectSeats(@WebParam(name = "idSeats") String id) //String seats = "A1-A2-A3-A4";
-	{
-		String[] allId = id.split("-");
-		for (int i = 0; i < allId.length; i++)
-		{
-			//traitement
-		}
-		return null;
+		//return metier.getEvent(id_event).getSeats();
+		return metier.getBookedSeats(id_event);
 	}
 }
+
+
+/*@WebMethod
+public String selectSeats(@WebParam(name = "idSeats") String id) //String seats = "A1-A2-A3-A4";
+{
+	String[] allId = id.split("-");
+	for (int i = 0; i < allId.length; i++)
+	{
+		//traitement
+	}
+	return null;
+}*/
+
+/*@WebMethod
+public String getEventArtist(@WebParam(name = "idEvent") int id_event)
+{
+	return metier.getEvent(id_event).getArtistName();
+}
+
+@WebMethod
+public String getEventDate(@WebParam(name = "idEvent") int id_event)
+{
+	return String.valueOf(metier.getEvent(id_event).getDate());
+}
+
+@WebMethod
+public String getEventCategory(@WebParam(name = "idEvent") int id_event)
+{
+	return metier.getEvent(id_event).getCategory().getName();
+}
+
+@WebMethod
+public float getEventRegularPrice(@WebParam(name = "idEvent") int id_event)
+{
+	return metier.getEvent(id_event).getCategory().getPrice();
+}*/

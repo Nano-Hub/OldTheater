@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Table(name = "user")
 @NamedQueries({ 
 @NamedQuery(name = "User.findUserById", query = "SELECT u FROM User u WHERE u.idUser = :idUser "),
-//@NamedQuery(name = "User.findUserByMail", query = "SELECT * FROM user WHERE email = :email;"),
+@NamedQuery(name = "User.findUserByMail", query = "SELECT u FROM User u WHERE u.email = :email "),
 //@NamedQuery(name = "User.createUser", query = "INSERT INTO `user` (name, password, email) VALUES ( :name , :password , :email);")
 //@NamedQuery(name = "User.displayShows", query = "SELECT event.artist_name as  artiste, event.date as date, FROM user JOIN reservation ON user.id_user = reservation.user_id JOIN  event on set.id_event = event.id_event  WHERE user.id_user = :idUser ;")
 })
@@ -45,6 +45,13 @@ public class User implements Serializable
 	public User()
 	{
 
+	}
+	
+	public User(String name, String password, String email)
+	{
+		this.username = name;
+		this.password = password;
+		this.email = email;
 	}
 
 	public long getIdUser()

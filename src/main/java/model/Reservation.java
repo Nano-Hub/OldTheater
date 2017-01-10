@@ -2,6 +2,7 @@ package model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -32,6 +33,12 @@ import javax.persistence.Table;
 		(
 			name = "Reservation.showReservation", 
 			query = "SELECT r FROM Reservation r WHERE r.user = :user_id AND r.event = :event_id "
+		),
+		
+		@NamedQuery
+		(
+			name = "Reservation.getBookedSeat", 
+			query = "SELECT r FROM Reservation r WHERE r.event = :event_id "
 		),
 		
 		@NamedQuery
