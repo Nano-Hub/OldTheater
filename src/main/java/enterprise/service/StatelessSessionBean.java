@@ -85,32 +85,48 @@ public class StatelessSessionBean implements StatelessLocal
 		Query query = em.createNamedQuery("User.findUserById");
 		query.setParameter("idUser", id_user);
 
+		try{
 		User user = (User) query.getSingleResult();
 
 		return user;
+		} catch (NoResultException e) { System.out.println("no result"); };
+		return null;
+		
 	}
 
 	@Override
 	public String createUser(String name, String email, String password)
 	{
-		UserTransaction utx = context.getUserTransaction();
 		
-		try 
+		
+		Query query = em.createNamedQuery("User.findUserByMail");
+		query.setParameter("email", email);
+		
+		try
 		{
-			utx.begin();
-			User user = new User(name, password, email);
-			em.persist(user);
-			utx.commit();
-			
-		} catch (NotSupportedException | SystemException | SecurityException |
-				IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-			return "Creation KO"; //TODO exception
+			User user = (User) query.getSingleResult();
+			//EMAIL EXISTS
+			return "Email already exists";
 		}
-			
-		return "Creation OK"; //TODO exception
+		catch (NoResultException e) //EMAIL DOES NOT EXIST
+		{
+			try 
+			{
+				UserTransaction utx = context.getUserTransaction();
+				utx.begin();
+				User user = new User(name, password, email);
+				em.persist(user);
+				utx.commit();
+
+				return "Creation OK"; //TODO exception
+				
+			} catch (NotSupportedException | SystemException | SecurityException |
+					IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e2) {
+				e2.printStackTrace();
+				
+				return "Creation failed"; //TODO exception
+			}
+		}
 	}
 
 	@Override
@@ -144,10 +160,16 @@ public class StatelessSessionBean implements StatelessLocal
 	public TheaterEvent getEvent(int id_event)
 	{
 		Query query = em.createNamedQuery("TheaterEvent.findEventById");
-		query.setParameter("idEvent", id_event);
-		TheaterEvent te = (TheaterEvent) query.getSingleResult();
-
-		return te;
+		query.setParameter("idEvent", id_event);	
+		
+		try
+		{
+			TheaterEvent te = (TheaterEvent) query.getSingleResult();
+			return te;
+		}
+		catch(NoResultException e) { System.out.println("No events");}
+		return null;
+		
 	}
 
 	@Override
@@ -166,74 +188,79 @@ public class StatelessSessionBean implements StatelessLocal
 			return null;
 		}
 	}
+	
+	@Override
+	public List<SeatCategory> getSeatsInfos()
+	{
+		Query query = em.createNamedQuery("SeatCategory.FindAll");
+		try
+		{
+			List<SeatCategory> listSeatCat = (List<SeatCategory>) query.getResultList();
+			if(listSeatCat != null && listSeatCat.size() > 0)
+			{
+				return listSeatCat;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch(NoResultException e)
+		{
+			System.err.println("NO EVENT IN THE FUTUR");
+			System.err.println(e);
+			return null;
+		}
+	}
 
 	@Override
 	public String lockSeats(int id_event, String infoSeat, int idUser) //TODO : remove seats 
 	{
-		UserTransaction utx = context.getUserTransaction();
-		System.out.println("step1");
-		try
-		{
-			utx.begin();
+		UserTransaction utx = context.getUserTransaction();		
+		try {
 			Query query = em.createNamedQuery("SeatCategory.FindByName");
 			query.setParameter("name", infoSeat.charAt(0));
 			SeatCategory seatCat = (SeatCategory) query.getSingleResult();
-
-			query = em.createNamedQuery("TheaterEvent.findEventById");
-			query.setParameter("idEvent", id_event);
-			TheaterEvent theaterEvent = (TheaterEvent) query.getSingleResult();
-
-			query = em.createNamedQuery("User.findUserById");
-			query.setParameter("idUser", idUser);
-			User user = (User) query.getSingleResult();
-
-			Reservation reservation = new Reservation(seatCat, theaterEvent, user, Integer.parseInt(infoSeat.substring(1)));
-			em.persist(reservation);
-
-			utx.commit();
-
+			if(Integer.parseInt(infoSeat.substring(1)) < seatCat.getNbSeats())
+			{
+				try {
+					query = em.createNamedQuery("TheaterEvent.findEventById");
+					query.setParameter("idEvent", id_event);
+					TheaterEvent theaterEvent = (TheaterEvent) query.getSingleResult();
+					try {
+						query = em.createNamedQuery("User.findUserById");
+						query.setParameter("idUser", idUser);
+						User user = (User) query.getSingleResult();
+						//Everything ok
+						try {
+							utx.begin();
+						
+							Reservation reservation = new Reservation(seatCat, theaterEvent, user, Integer.parseInt(infoSeat.substring(1)));
+							em.persist(reservation);
+	
+							utx.commit();
+							return "locking seat OK";
+	
+						} catch (NotSupportedException | SystemException | SecurityException |
+								IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+							System.out.println("Locking seat failed");
+							return "Locking seat failed";
+						}
+					}
+					catch(NoResultException e){System.out.println("User does not exist"); return "User does not exist";}
+				}
+				catch(NoResultException e){System.out.println("Event does not exist"); return "Event does not exist";}
+			}
+			else
+			{
+				System.out.println("This seat doen not exist"); 
+				return "This seat doen not exist";
+			}
 		}
-		catch (SecurityException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (IllegalStateException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (RollbackException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (HeuristicMixedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (HeuristicRollbackException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (NotSupportedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (SystemException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return "TODO"; //TODO TODO
-
+		catch(NoResultException e){System.err.println("Seat does not exist"); return "Seat does not exist";}
 	}
 
-	@Override
+	@Override //TODO CHECK EXCEPTIONS
 	public String bookSeats(int id_event, String infoSeat, int idUser)
 	{
 		UserTransaction utx = context.getUserTransaction();
@@ -258,48 +285,66 @@ public class StatelessSessionBean implements StatelessLocal
 			reservation.setState(1);
 			em.persist(reservation);
 			utx.commit();
-
 		}
 		catch (SecurityException | IllegalStateException | RollbackException | HeuristicMixedException
 				| HeuristicRollbackException | NotSupportedException | SystemException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return "TODO";
 	}
 
 	@Override
 	public String getBookedSeats(int id_event)
 	{
-		Query query = em.createNamedQuery("TheaterEvent.findEventById");
-		query.setParameter("idEvent", id_event);
-		TheaterEvent event = (TheaterEvent) query.getSingleResult();
-		
-		query = em.createNamedQuery("Reservation.getBookedSeat");
-		query.setParameter("event_id", event);
-		try{
-		List<Reservation> seats = (List<Reservation>) query.getResultList();
-		
-		String seatsStr = "";
-		for (Reservation r : seats)
+		try
 		{
-			seatsStr += String.valueOf(r.getCategory().getName());
-			seatsStr += r.getNumber();
-			seatsStr += "-";
+			Query query = em.createNamedQuery("TheaterEvent.findEventById");
+			query.setParameter("idEvent", id_event);
+			TheaterEvent event = (TheaterEvent) query.getSingleResult();
+			query = em.createNamedQuery("Reservation.getBookedSeat");
+			query.setParameter("event_id", event);
+			List<Reservation> seats = (List<Reservation>) query.getResultList();
+			if(seats != null && seats.size() > 0)
+			{
+				String seatsStr = "";
+				for (Reservation r : seats)
+				{
+					seatsStr += String.valueOf(r.getCategory().getName());
+					seatsStr += r.getNumber();
+					seatsStr += "-";
+				}
+				seatsStr = seatsStr.substring(0,  seatsStr.length()-1);
+				return seatsStr;
+			}
+			else
+			{
+				return "NONE";
+			}
+			
+		}
+		catch(NoResultException e) { System.out.println("Event not found"); return "Event not found";}
+	}
+	
+	@Override
+	public float getTotalEarningFromTheBeginningOfTheUniverse()
+	{
+		//get all reservation where state = 1;
+		//regular price * multiplier 
+		float totalEarningFromTheBeginningOfTheUniverse = 0;
+		
+		Query query = em.createNamedQuery("Reservation.showAllFinished");
+		List<Reservation> listReservation = (List<Reservation>) query.getResultList();
+		if(listReservation != null && listReservation.size() > 0)
+		{
+			for(Reservation r : listReservation)
+			{
+				float price = r.getEvent().getCategory().getPrice() * r.getCategory().getMultiplier();
+				totalEarningFromTheBeginningOfTheUniverse += price;
+			}
 		}
 		
-		seatsStr = seatsStr.substring(0,  seatsStr.length()-1);
-
-		return seatsStr;
-		}
-		catch(NoResultException e)
-		{
-			System.out.println("NO RESULT ");
-			System.out.println(e);
-			return null;
-		}
+		return totalEarningFromTheBeginningOfTheUniverse;
 	}
 }
 

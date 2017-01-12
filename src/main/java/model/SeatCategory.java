@@ -16,7 +16,8 @@ import javax.persistence.Table;
 @NamedQueries
 (
 	{
-		@NamedQuery(name = "SeatCategory.FindByName", query = "SELECT sc FROM SeatCategory sc WHERE sc.name = :name ") 
+		@NamedQuery(name = "SeatCategory.FindByName", query = "SELECT sc FROM SeatCategory sc WHERE sc.name = :name "),
+		@NamedQuery(name = "SeatCategory.FindAll", query = "SELECT sc FROM SeatCategory sc ")
 	}
 )
 
@@ -27,7 +28,7 @@ public class SeatCategory
 	private int id;
 
 	@Column(name = "name")
-	private char name;
+	private String name;
 
 	@Column(name = "multiplier")
 	private float multiplier;
@@ -39,15 +40,12 @@ public class SeatCategory
 	@OneToMany(mappedBy = "seatCategory")
 	private List<Reservation> reservations;
 
-	public SeatCategory(/*int id, char name, float multiplier, int nbSeats*/)
+	public SeatCategory()
 	{
-		/*this.id = id;
-		this.name = name;
-		this.multiplier = multiplier;
-		this.nbSeats = nbSeats;*/
+		
 	}
 	
-	public SeatCategory(char seatInfo)
+	public SeatCategory(String seatInfo)
 	{
 		this.name = seatInfo;
 	}
@@ -72,12 +70,12 @@ public class SeatCategory
 		this.multiplier = multiplier;
 	}
 
-	public char getName()
+	public String getName()
 	{
 		return name;
 	}
 
-	public void setName(char name)
+	public void setName(String name)
 	{
 		this.name = name;
 	}

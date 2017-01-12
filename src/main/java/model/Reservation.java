@@ -21,19 +21,19 @@ import javax.persistence.Table;
 		(
 			name = "Reservation.lock", 
 			query = "INSERT INTO reservation (seat_category_id, user_id, event_id, number) VALUES ( :category , :user_id , :event_id, :number );"
-		),
+		),*/
 		
-		@NamedQuery
+		/*@NamedQuery
 		(
 			name = "Reservation.book", 
 			query = "INSERT INTO reservation (seat_category_id, user_id, event_id) VALUES ( :category , :user_id , :event_id );"
 		),*/
 		
-		@NamedQuery
+		/*@NamedQuery
 		(
 			name = "Reservation.showReservation", 
 			query = "SELECT r FROM Reservation r WHERE r.user = :user_id AND r.event = :event_id "
-		),
+		),*/
 		
 		@NamedQuery
 		(
@@ -41,17 +41,23 @@ import javax.persistence.Table;
 			query = "SELECT r FROM Reservation r WHERE r.event = :event_id "
 		),
 		
-		@NamedQuery
+		/*@NamedQuery
 		(
 			name = "Reservation.showUser", 
 			query = "SELECT r FROM Reservation r WHERE r.user = :user_id "
-		),
+		),*/
 		
-		@NamedQuery
+		/*@NamedQuery
 		(
 			name = "Reservation.showAll", 
 			query = "SELECT r FROM Reservation r"
-		), 
+		), */
+		
+		@NamedQuery
+		(
+			name = "Reservation.showAllFinished", 
+			query = "SELECT r FROM Reservation r WHERE r.state = 1 "
+		),
 		
 		@NamedQuery
 		(

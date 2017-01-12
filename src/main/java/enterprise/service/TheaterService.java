@@ -10,6 +10,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import model.Reservation;
+import model.SeatCategory;
 import model.TheaterEvent;
 import model.User;
 
@@ -24,7 +25,11 @@ public class TheaterService
 	@WebMethod
 	public String getUsernameFromId(@WebParam(name = "idUser") int id_user)
 	{
-		return metier.getUser(id_user).getUsername();
+		User user = metier.getUser(id_user);
+		if(user != null)
+			return user.getUsername();
+		else
+			return "NONE";
 	}
 
 	@WebMethod
@@ -42,7 +47,7 @@ public class TheaterService
 
 	//THEATER EVENTS
 	@WebMethod
-	public List<TheaterEvent> getAllEvents()
+	public List<TheaterEvent> getAllActiveEvents()
 	{
 		return metier.showActiveEvents();
 	}
@@ -51,6 +56,12 @@ public class TheaterService
 	public TheaterEvent getEvent(@WebParam(name = "idEvent") int idEvent)
 	{
 		return metier.getEvent(idEvent);
+	}
+	
+	@WebMethod
+	public List<SeatCategory> getSeatsInfos()
+	{
+		return metier.getSeatsInfos();
 	}
 
 	//RESERVATIONS AND SEATS
@@ -68,7 +79,7 @@ public class TheaterService
 		}
 	}
 
-	@WebMethod
+	@WebMethod//TODO MANAGE EXCEPTIONS
 	public String bookSeats(@WebParam(name = "idEvent") int id_event, @WebParam(name = "seat") String seat,
 			@WebParam(name = "id_user") int id_user)
 	{
@@ -85,8 +96,13 @@ public class TheaterService
 	@WebMethod
 	public String getEventBookedSeats(@WebParam(name = "idEvent") int id_event)
 	{
-		//return metier.getEvent(id_event).getSeats();
 		return metier.getBookedSeats(id_event);
+	}
+	
+	@WebMethod
+	public float getTotalEarningFromTheBeginningOfTheUniverse()
+	{
+		return metier.getTotalEarningFromTheBeginningOfTheUniverse();
 	}
 }
 

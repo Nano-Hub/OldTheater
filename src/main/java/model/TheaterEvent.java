@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "event")
 @NamedQueries({
-		@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.idEvent, e.artistName, e.date, c.name, c.price  FROM TheaterEvent e, EventCategory c WHERE e.category = c.idCategory"),
+		//@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.idEvent, e.artistName, e.date, c.name, c.price  FROM TheaterEvent e, EventCategory c WHERE e.category = c.idCategory"),
 		@NamedQuery(name = "TheaterEvent.showAllActiveEvents", query = "SELECT e FROM TheaterEvent e WHERE  (e.date > CURRENT_TIME) "), 
 		@NamedQuery(name = "TheaterEvent.findEventById", query = "SELECT e FROM TheaterEvent e WHERE e.idEvent = :idEvent ")
 		//@NamedQuery(name = "TheaterEvent.displayBookedSeats", query = "SELECT id_reservation, seat_category_id FROM reservation WHERE event_id = :idEvent;")
