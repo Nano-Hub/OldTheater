@@ -8,6 +8,8 @@ import javax.ejb.Stateless;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 
 import model.Reservation;
 import model.SeatCategory;
@@ -15,6 +17,7 @@ import model.TheaterEvent;
 import model.User;
 
 @Stateless
+@Path("test")
 @WebService
 public class TheaterService
 {
@@ -31,8 +34,17 @@ public class TheaterService
 		else
 			return "NONE";
 	}
-
-	@WebMethod
+	
+	public User getUser(@WebParam(name = "idUser") int id_user)
+	{
+		User user = metier.getUser(id_user);
+		if(user != null)
+			return user;
+		else
+			return null;
+	}
+	
+	@WebMethod 
 	public String createUser(@WebParam(name = "nom") String nom, @WebParam(name = "password") String password,
 			@WebParam(name = "email") String email)
 	{
@@ -46,6 +58,8 @@ public class TheaterService
 	}
 
 	//THEATER EVENTS
+	@GET
+	@Path("test")
 	@WebMethod
 	public List<TheaterEvent> getAllActiveEvents()
 	{

@@ -1,19 +1,19 @@
 package enterprise.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
 import model.SeatCategory;
 import model.TheaterEvent;
 import model.User;
 
-@Local
+@Remote
 public interface StatelessLocal
 {
 	//USER
-	public User getUser(int id_user); 
+	public User getUser(int id_user);
+	public String getUserStr(int id_user); 
 	public String createUser(String name, String email, String password);
 	public String login(String email, String password);
 	

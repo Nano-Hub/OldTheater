@@ -118,4 +118,12 @@ public class User implements Serializable
 		return seat;
 	}
 
+	@Override
+	public String toString() {
+		return "User [idUser=" + idUser + ", password=" + password + ", username=" + username + ", email=" + email
+				+ ", seats=" + seats + "]";
+	}
+	
+	
+
 }

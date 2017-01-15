@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -15,8 +16,10 @@ import javax.persistence.Table;
 // CHANGE -> */ @NamedQueries({
 //		@NamedQuery(name = "SeatCategory.FindSeat", query = "SELECT * FROM seat_category WHERE id_seat_category = :id_category ;"), })
 
-public class EventCategory
+public class EventCategory implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name = "id_category")
 	private int idCategory;

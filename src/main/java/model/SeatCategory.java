@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -21,8 +22,10 @@ import javax.persistence.Table;
 	}
 )
 
-public class SeatCategory
+public class SeatCategory implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name = "id_seat_category")
 	private int id;

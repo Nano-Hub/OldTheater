@@ -6,9 +6,17 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/x
 
 <persistence-unit name="em" transaction-type="JTA" > 
 <jta-data-source>jdbc/__default</jta-data-source>
-<class>model.BankAccount</class>
-<class>model.BankCustomer</class>  
+<class>model.User</class>
+<class>model.TheaterEvent</class>
+<class>model.SeatCategory</class>
+<class>model.Reservation</class>
+<class>model.EventCategory</class>
+
  
+<properties>
+     <property name="eclipselink.weaving" value="false"/>
+</properties>
+
     <!-- This is where you mention your JPA runtime provider e.g. it's EclipseLink here transaction-type="JTA" <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider> 
       
  

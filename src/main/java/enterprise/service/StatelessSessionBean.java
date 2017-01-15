@@ -86,22 +86,41 @@ public class StatelessSessionBean implements StatelessLocal
 		query.setParameter("idUser", id_user);
 
 		try{
-		User user = (User) query.getSingleResult();
+			User user = (User) query.getSingleResult();
 
-		return user;
+			System.out.println(user);
+
+			return user;
 		} catch (NoResultException e) { System.out.println("no result"); };
 		return null;
-		
+
+	}
+
+	@Override
+	public String getUserStr(int id_user)
+	{
+		Query query = em.createNamedQuery("User.findUserById");
+		query.setParameter("idUser", id_user);
+
+		try{
+			User user = (User) query.getSingleResult();
+
+			System.out.println(user);
+
+			return user.toString();
+		} catch (NoResultException e) { System.out.println("no result"); };
+		return "no result";
+
 	}
 
 	@Override
 	public String createUser(String name, String email, String password)
 	{
-		
-		
+
+
 		Query query = em.createNamedQuery("User.findUserByMail");
 		query.setParameter("email", email);
-		
+
 		try
 		{
 			User user = (User) query.getSingleResult();
@@ -119,11 +138,11 @@ public class StatelessSessionBean implements StatelessLocal
 				utx.commit();
 
 				return "Creation OK"; //TODO exception
-				
+
 			} catch (NotSupportedException | SystemException | SecurityException |
 					IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e2) {
 				e2.printStackTrace();
-				
+
 				return "Creation failed"; //TODO exception
 			}
 		}
@@ -135,11 +154,11 @@ public class StatelessSessionBean implements StatelessLocal
 		//Does this email exist ?
 		Query query = em.createNamedQuery("User.findUserByMail");
 		query.setParameter("email", email);
-		
+
 		try
 		{
 			User user = (User) query.getSingleResult();
-		
+
 			if(password.equals(user.getPassword())) //password OK
 			{
 				return String.valueOf(user.getIdUser());
@@ -153,7 +172,7 @@ public class StatelessSessionBean implements StatelessLocal
 		{
 			return "Email does not exist";
 		}
-		
+
 	}
 
 	@Override
@@ -161,7 +180,7 @@ public class StatelessSessionBean implements StatelessLocal
 	{
 		Query query = em.createNamedQuery("TheaterEvent.findEventById");
 		query.setParameter("idEvent", id_event);	
-		
+
 		try
 		{
 			TheaterEvent te = (TheaterEvent) query.getSingleResult();
@@ -169,7 +188,7 @@ public class StatelessSessionBean implements StatelessLocal
 		}
 		catch(NoResultException e) { System.out.println("No events");}
 		return null;
-		
+
 	}
 
 	@Override
@@ -188,7 +207,7 @@ public class StatelessSessionBean implements StatelessLocal
 			return null;
 		}
 	}
-	
+
 	@Override
 	public List<SeatCategory> getSeatsInfos()
 	{
@@ -234,13 +253,13 @@ public class StatelessSessionBean implements StatelessLocal
 						//Everything ok
 						try {
 							utx.begin();
-						
+
 							Reservation reservation = new Reservation(seatCat, theaterEvent, user, Integer.parseInt(infoSeat.substring(1)));
 							em.persist(reservation);
-	
+
 							utx.commit();
 							return "locking seat OK";
-	
+
 						} catch (NotSupportedException | SystemException | SecurityException |
 								IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
 							System.out.println("Locking seat failed");
@@ -321,18 +340,18 @@ public class StatelessSessionBean implements StatelessLocal
 			{
 				return "NONE";
 			}
-			
+
 		}
 		catch(NoResultException e) { System.out.println("Event not found"); return "Event not found";}
 	}
-	
+
 	@Override
 	public float getTotalEarningFromTheBeginningOfTheUniverse()
 	{
 		//get all reservation where state = 1;
 		//regular price * multiplier 
 		float totalEarningFromTheBeginningOfTheUniverse = 0;
-		
+
 		Query query = em.createNamedQuery("Reservation.showAllFinished");
 		List<Reservation> listReservation = (List<Reservation>) query.getResultList();
 		if(listReservation != null && listReservation.size() > 0)
@@ -343,7 +362,7 @@ public class StatelessSessionBean implements StatelessLocal
 				totalEarningFromTheBeginningOfTheUniverse += price;
 			}
 		}
-		
+
 		return totalEarningFromTheBeginningOfTheUniverse;
 	}
 }
