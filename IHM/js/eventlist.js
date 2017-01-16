@@ -1,35 +1,31 @@
 function readEvents()
 {
-	 $('#tableEvents').append('<tr onclick="goToBookSeat(1)" style="cursor: pointer"><td>aaa</td><td>bbb</td><td>ddd</td></tr>');
+	 //$('#tableEvents').append('<tr onclick="goToBookSeat(1)" style="cursor: pointer"><td>aaa</td><td>bbb</td><td>ddd</td></tr>');
 	 //$('#tableEvents').append('<tr onclick="goToBookSeat('+idEvent+')" style="cursor: pointer"><td>'+aaa+'</td><td>'+bbb+'</td><td>'+ddd+'</td></tr>');
 	 	
 	$.get("	http://localhost:8080/OldTheaterClient/theater/client/eventList", function(data)
 	{
 		var response = "";
-		
+		//id name date category
 		for(var i = 0; i < data.length; i++)
 			{
 			response += data[i];
 			}
-		alert(response + " " + response.length);
-		
-		if(data.length == 1)
-		{	
-			setCookie("id", response, 1);	
-			document.location.href="index.html";
-		}
-		else
-		{
-			alert(response); 
-		
+			
+		var splittedEvent = response.split("/");
+		var splittedInfos;
+
+		for(var i = 0; i < splittedEvent.length; i++)
+			{
+			splittedInfos= splittedEvent[i].split(",");
+			$('#tableEvents').append('<tr onclick="goToBookSeat('+splittedInfos[0]+')" style="cursor: pointer"><td>'+splittedInfos[1]+'</td><td>'+splittedInfos[2]+'</td><td>'+splittedInfos[3]+'</td></tr>');
+			}
 	})
 	.error(function() { 
-		alert("Wrong combination."); 
+		alert("Problème de connection."); 
 	});
 }
 
-}
- 
 
 function goToBookSeat(idEvent){
 	alert(idEvent);

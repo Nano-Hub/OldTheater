@@ -19,9 +19,7 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
-	  <script src="js/cookie.js"></script>
-	  <script src="js/main.js"></script>
-      <script src="js/payment.js"></script>
+	  
 		
    </head>
    <body>
@@ -91,14 +89,14 @@
                         <div class="row">
                            <div class="col-xs-12">
                               <div class="form-group">
-                                 <label for="couponCode">COUPON CODE</label>
-                                 <input type="text" class="form-control" name="couponCode" />
+                                 <label for="couponCode">Price</label>
+                                 <input type="text" id="priceInput" class="form-control" name="couponCode" disabled=""/>
                               </div>
                            </div>
                         </div>
                         <div class="row">
                            <div class="col-xs-12">
-                              <button class="btn btn-success btn-lg btn-block" type="submit" onclick="bookSeatsJS()">Start Subscription</button> <!--public String bookSeats(int id_event, int idUser);-->
+                              <button class="btn btn-success btn-lg btn-block" type="submit" onclick="bookSeatsJS()">Buy</button> <!--public String bookSeats(int id_event, int idUser);-->
                            </div>
                         </div>
                         <div class="row" style="display:none;">
@@ -115,11 +113,15 @@
       </div>
       <!-- If you're using Stripe for payments -->
       <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
    </body>
    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
    <!-- Include all compiled plugins (below), or include individual files as needed -->
    <script src="bootstrap/js/bootstrap.min.js"></script>
+   <script src="js/cookie.js"></script>
+	  <script src="js/main.js"></script>
+      <script src="js/payment.js"></script>
    <script></script>
    </body>
 </html>

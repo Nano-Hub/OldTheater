@@ -1,4 +1,39 @@
 	var count=0;
+	
+	function loadSeats()
+	{
+			//Siege du mec siege / siege  reserevre
+			$.get("http://localhost:8080/OldTheaterClient/theater/client/bookedSeats?idUser="+getCookie("id")+"&idEvent="+getCookie("idEvent"), function(data)
+		{
+			var response = "";
+			
+			for(var i = 0; i < data.length; i++)
+				{
+					response += data[i];
+				}		
+				
+			var splittedSpecialSeats = response.split("/");
+			
+			//str.substring(1, 4)
+			count = splittedSpecialSeats[1];
+			var splittedSeats = splittedSpecialSeats[0].split("-");
+			
+			for(var i = 0; i < splittedSeats.length; i++)
+			{
+				var cat = splittedSeats[i].substring(0, 1);
+				var number =  splittedSeats[i].substring(1);
+				$("#"+cat+number).removeClass("btn-success");
+				$("#"+cat+number).addClass("btn-danger");
+				$("#"+cat+number).prop("disabled", true);
+			}			
+		})
+		.error(function() { 
+			alert("Problème de connection."); 
+		});
+	}
+	
+	
+
 	function categoryA()
 	{
 		$("#root").append('<h2>Category A</h2>');
@@ -91,7 +126,31 @@ function valid()
 	{
 		  $( ".result" ).html( data );
 	});*/
-	lockSeats(getCookie("idEvent"), result, getCookie("token"));
+	//lockSeats(getCookie("idEvent"), result, getCookie("token"));
+	
+	$.get("http://localhost:8080/OldTheaterClient/theater/client/lockSeats?idUser="+getCookie("id")+"&idEvent="+getCookie("idEvent")+"&seats="+result, function(data)
+	{
+		var response = "";
+		
+		for(var i = 0; i < data.length; i++)
+			{
+				response += data[i];
+			}
+			
+		if($.isNumeric(response))
+		{	
+			setCookie("price", response, 0.1);	
+			document.location.href="payment.html";
+		}
+		else
+		{
+			alert(response); 
+		}
+				
+	})
+	.error(function() { 
+		alert("Problème de connection."); 
+	});
 	
 	
 	cancelBooking();
