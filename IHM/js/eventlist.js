@@ -28,7 +28,6 @@ function readEvents()
 
 
 function goToBookSeat(idEvent){
-	alert(idEvent);
 	setCookie("idEvent",idEvent,1);
 	document.location.href="book.html";
 }
