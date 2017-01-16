@@ -11,7 +11,7 @@ function login()
 			{
 			response += data[i];
 			}
-		alert(response + " " response.length);
+		alert(response);
 		
 		if(data.length == 1)
 		{	
@@ -21,6 +21,7 @@ function login()
 		else
 		{
 			alert(response); 
+		}
 		
 	})
 	.error(function() { 
