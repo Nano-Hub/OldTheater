@@ -2,7 +2,8 @@
 	
 	function loadSeats()
 	{
-			//Siege du mec siege / siege  reserevre
+		//setCookie("eventCat", 50, 1);
+			//Siege du mec siege / siege reserver
 			$.get("http://localhost:8080/OldTheaterClient/theater/client/bookedSeats?idUser="+getCookie("id")+"&idEvent="+getCookie("idEvent"), function(data)
 		{
 			var response = "";
@@ -27,16 +28,14 @@
 				$("#"+cat+number).prop("disabled", true);
 			}			
 		})
-		.error(function() { 
-			alert("Problème de connection."); 
-		});
 	}
 	
 	
 
 	function categoryA()
-	{
-		$("#root").append('<h2>Category A</h2>');
+	{//1 1.25 2
+		var price = getCookie("eventCat") * 2;
+		$("#root").append('<h2>Category A : '+ price +' €</h2>');
 		for(var i = 1 ; i <= 25 ; i++)
 		{
 			$("#root").append('<span><button id="A'+i+'" onclick=book(A'+i+') class="btn btn-success btnBook" data-color="success" >' + i + ' </button></span> ');
@@ -45,7 +44,8 @@
 
 	function categoryB()
 	{
-		$("#root").append('<h2>Category B</h2>');
+		var price = getCookie("eventCat") * 1.5;
+		$("#root").append('<h2>Category B : '+ price +' €</h2>');
 		for(var i = 1 ; i <= 45 ; i++)
 		{
 			$("#root").append('<span  ><button onclick=book(B'+i+') id="B'+i+'" class="btn btn-success btnBook" data-color="success" >' + i + ' </button></span> ');
@@ -54,15 +54,16 @@
 
 	function categoryC()
 	{
-		$("#root").append('<h2>Category C</h2>');
+		var price = getCookie("eventCat") * 1.25;
+		$("#root").append('<h2>Category C : '+ price +' €</h2>');
 		for(var i = 1 ; i <= 100 ; i++)
 		{
 			$("#root").append('<span ><button onclick=book(C'+i+') id="C'+i+'" class="btn btn-success btnBook" data-color="success" >' + i + ' </button></span> ');
 		}
 	}
 function categoryD()
-	{
-		$("#root").append('<h2>Category D</h2>');
+	{	
+		$("#root").append('<h2>Category D : '+ getCookie("eventCat") +' €</h2>');
 		for(var i = 1 ; i <= 500 ; i++)
 		{
 			$("#root").append('<span><button onclick=book(D'+i+') id="D'+i+'" class="btn btn-success btnBook" data-color="success" >' + i + ' </button></span> ');

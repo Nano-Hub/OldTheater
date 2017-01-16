@@ -19,6 +19,7 @@ function readEvents()
 			{
 			splittedInfos= splittedEvent[i].split(",");
 			$('#tableEvents').append('<tr onclick="goToBookSeat('+splittedInfos[0]+')" style="cursor: pointer"><td>'+splittedInfos[1]+'</td><td>'+splittedInfos[2]+'</td><td>'+splittedInfos[3]+'</td></tr>');
+			setCookie("eventCat",splittedInfos[3], 1);
 			}
 	})
 	.error(function() { 
