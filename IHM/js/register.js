@@ -1,5 +1,5 @@
 
-    function login()
+    function register()
     {
         var name = document.getElementById("name").value;
             var email = document.getElementById("username").value;
