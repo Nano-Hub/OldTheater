@@ -18,55 +18,43 @@ import javax.persistence.Table;
 
 @NamedQueries
 (
-	{
-		/*@NamedQuery
-		(
-			name = "Reservation.lock", 
-			query = "INSERT INTO reservation (seat_category_id, user_id, event_id, number) VALUES ( :category , :user_id , :event_id, :number );"
-		),*/
-		
-		/*@NamedQuery
-		(
-			name = "Reservation.book", 
-			query = "INSERT INTO reservation (seat_category_id, user_id, event_id) VALUES ( :category , :user_id , :event_id );"
-		),*/
-		
-		/*@NamedQuery
-		(
-			name = "Reservation.showReservation", 
-			query = "SELECT r FROM Reservation r WHERE r.user = :user_id AND r.event = :event_id "
-		),*/
-		
-		@NamedQuery
-		(
-			name = "Reservation.getBookedSeat", 
-			query = "SELECT r FROM Reservation r WHERE r.event = :event_id "
-		),
-		
-		/*@NamedQuery
-		(
-			name = "Reservation.showUser", 
-			query = "SELECT r FROM Reservation r WHERE r.user = :user_id "
-		),*/
-		
-		/*@NamedQuery
-		(
-			name = "Reservation.showAll", 
-			query = "SELECT r FROM Reservation r"
-		), */
-		
-		@NamedQuery
-		(
-			name = "Reservation.showAllFinished", 
-			query = "SELECT r FROM Reservation r WHERE r.state = 1 "
-		),
-		
-		@NamedQuery
-		(
-			name = "Reservation.getFromCatUserEventNumber", 
-			query = "SELECT r FROM Reservation r WHERE r.user.idUser = :userId AND r.event.idEvent = :eventId AND r.number = :number AND r.seatCategory = :category "
-		), 
-	}
+		{		
+			@NamedQuery
+			(
+					name = "Reservation.getBookedSeat", 
+					query = "SELECT r FROM Reservation r WHERE r.event = :event_id "
+					),
+
+			@NamedQuery
+			(
+					name = "Reservation.getBookedSeatUser", 
+					query = "SELECT r FROM Reservation r WHERE r.event = :event_id AND r.user.idUser = :userId"
+					),
+
+			@NamedQuery
+			(
+					name = "Reservation.showAllFinished", 
+					query = "SELECT r FROM Reservation r WHERE r.state = 1 "
+					),
+
+			@NamedQuery
+			(
+					name = "Reservation.getFromCatUserEventNumber", 
+					query = "SELECT r FROM Reservation r WHERE r.user.idUser = :userId AND r.event.idEvent = :eventId AND r.number = :number AND r.seatCategory = :category "
+					), 
+
+			@NamedQuery
+			(
+					name = "Reservation.getFromEventUser", 
+					query = "SELECT r FROM Reservation r WHERE r.user.idUser = :userId AND r.event.idEvent = :eventId "
+					), 
+
+			@NamedQuery
+			(
+					name = "Reservation.getFromEventUserLocked", 
+					query = "SELECT r FROM Reservation r WHERE r.user.idUser = :userId AND r.event.idEvent = :eventId AND r.state = 0 "
+					), 
+		}
 )
 
 public class Reservation implements Serializable
@@ -79,11 +67,11 @@ public class Reservation implements Serializable
 	private int number;
 	@Column(name = "state")
 	private int state;
-	
+
 	@OneToOne
 	@JoinColumn(name = "seat_category_id")
 	private SeatCategory seatCategory;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "event_id")
 	private TheaterEvent event;
@@ -92,8 +80,6 @@ public class Reservation implements Serializable
 	@JoinColumn(name = "user_id")
 	private User user;
 
-
-
 	public Reservation(SeatCategory seatCategory, TheaterEvent event, User user, int number)
 	{
 		this.seatCategory = seatCategory;
@@ -101,12 +87,12 @@ public class Reservation implements Serializable
 		this.user = user;
 		this.number = number;
 	}
-	
+
 	public Reservation()
 	{
-		
+
 	}
-	
+
 	public int getId()
 	{
 		return id;
@@ -159,5 +145,4 @@ public class Reservation implements Serializable
 	{
 		this.state = p_state;
 	}
-	
 }

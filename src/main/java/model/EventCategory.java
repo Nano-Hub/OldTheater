@@ -12,10 +12,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "event_category")
-//TODO Remove this comment
-// CHANGE -> */ @NamedQueries({
-//		@NamedQuery(name = "SeatCategory.FindSeat", query = "SELECT * FROM seat_category WHERE id_seat_category = :id_category ;"), })
-
 public class EventCategory implements Serializable
 {
 	private static final long serialVersionUID = 1L;

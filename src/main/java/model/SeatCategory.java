@@ -13,13 +13,20 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "seat_category")
-//TODO Remove this cmoment
 @NamedQueries
 (
-	{
-		@NamedQuery(name = "SeatCategory.FindByName", query = "SELECT sc FROM SeatCategory sc WHERE sc.name = :name "),
-		@NamedQuery(name = "SeatCategory.FindAll", query = "SELECT sc FROM SeatCategory sc ")
-	}
+		{
+			@NamedQuery
+			(
+					name = "SeatCategory.FindByName", 
+					query = "SELECT sc FROM SeatCategory sc WHERE sc.name = :name "
+					),
+			@NamedQuery
+			(
+					name = "SeatCategory.FindAll", 
+					query = "SELECT sc FROM SeatCategory sc "
+					)
+		}
 )
 
 public class SeatCategory implements Serializable
@@ -45,9 +52,9 @@ public class SeatCategory implements Serializable
 
 	public SeatCategory()
 	{
-		
+
 	}
-	
+
 	public SeatCategory(String seatInfo)
 	{
 		this.name = seatInfo;

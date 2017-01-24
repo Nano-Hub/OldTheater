@@ -1,8 +1,6 @@
 package model;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -19,12 +17,26 @@ import javax.xml.bind.annotation.XmlTransient;
 /** The persistent class for the BANK_CUSTOMERS database table. */
 @Entity
 @Table(name = "event")
-@NamedQueries({
-		//@NamedQuery(name = "TheaterEvent.showAllEvents", query = "SELECT e.idEvent, e.artistName, e.date, c.name, c.price  FROM TheaterEvent e, EventCategory c WHERE e.category = c.idCategory"),
-		@NamedQuery(name = "TheaterEvent.showAllActiveEvents", query = "SELECT e FROM TheaterEvent e WHERE  (e.date > CURRENT_TIME) "), 
-		@NamedQuery(name = "TheaterEvent.findEventById", query = "SELECT e FROM TheaterEvent e WHERE e.idEvent = :idEvent ")
-		//@NamedQuery(name = "TheaterEvent.displayBookedSeats", query = "SELECT id_reservation, seat_category_id FROM reservation WHERE event_id = :idEvent;")
-})
+@NamedQueries
+(
+		{
+			@NamedQuery
+			(
+					name = "TheaterEvent.showAllActiveEvents",
+					query = "SELECT e FROM TheaterEvent e WHERE  (e.date > CURRENT_TIME) "
+					),
+			@NamedQuery
+			(
+					name = "TheaterEvent.getAllEvents", 
+					query = "SELECT e FROM TheaterEvent e "
+					), 
+			@NamedQuery
+			(
+					name = "TheaterEvent.findEventById", 
+					query = "SELECT e FROM TheaterEvent e WHERE e.idEvent = :idEvent "
+					)
+		}
+)
 
 public class TheaterEvent implements Serializable
 {
@@ -50,20 +62,6 @@ public class TheaterEvent implements Serializable
 
 	}
 
-	public ArrayList<String> getBookedSeats()
-	{
-		ArrayList<String> bookedSeats = new ArrayList<String>();
-		String seat = "";
-		for (Reservation r : seats)
-		{
-			seat = String.valueOf(r.getCategory().getName());
-			seat += r.getNumber();
-			bookedSeats.add(seat);
-			seat = "";
-		}
-		return bookedSeats;
-	}
-
 	public int getIdEvent()
 	{
 		return this.idEvent;
@@ -73,7 +71,7 @@ public class TheaterEvent implements Serializable
 	{
 		this.idEvent = idEvent;
 	}
-	
+
 	public java.util.Calendar getDate() {
 		return date;
 	}
@@ -105,7 +103,7 @@ public class TheaterEvent implements Serializable
 	{
 		return this.seats;
 	}
-	
+
 	public void setSeats(List<Reservation> seats)
 	{
 		this.seats = seats;
@@ -130,6 +128,4 @@ public class TheaterEvent implements Serializable
 		return "TheaterEvent [idEvent=" + idEvent + ", artistName=" + artistName + ", date=" + date + ", category="
 				+ category + ", seats=" + seats + "]";
 	}
-	
-	
 }
